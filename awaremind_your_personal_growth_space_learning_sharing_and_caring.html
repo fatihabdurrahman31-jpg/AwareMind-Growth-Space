@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AwareMind – Your Personal Growth Space | Learning, Sharing, and Caring</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Fraunces"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            canvas: '#F8F7FA',
+            aware: {
+              950: '#231836',
+              900: '#352554',
+              800: '#4D387B',
+              700: '#5F3F90',
+              600: '#7554A8',
+              500: '#9D78BE',
+              200: '#E4D8F3',
+              100: '#F3EBF9',
+              50: '#FAF7FD'
+            },
+            teal: {
+              600: '#3B8F77',
+              500: '#4DAA90',
+              100: '#E6F5F0',
+              50: '#F2FAF7'
+            },
+            coral: {
+              600: '#D6555A',
+              500: '#E56B6F',
+              300: '#F3A6B4',
+              100: '#FCECEF',
+              50: '#FDF5F7'
+            },
+            amber: {
+              600: '#C28135',
+              500: '#D99B52',
+              100: '#FBF0E1',
+              50: '#FDF9F2'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #F8F7FA;
+      color: #1F1B29;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    .ama-card {
+      background: #FFFFFF;
+      border: 1px solid #ECE7F4;
+      border-radius: 22px;
+      box-shadow: 0 10px 30px -12px rgba(77, 56, 123, 0.08);
+    }
+    .ama-hero-banner {
+      background: radial-gradient(circle at 88% 18%, rgba(243, 166, 180, 0.24) 0%, transparent 45%),
+                  linear-gradient(135deg, #352554 0%, #4D387B 48%, #6D529E 100%);
+      border-radius: 24px;
+      box-shadow: 0 16px 36px -12px rgba(53, 37, 84, 0.28);
+    }
+    .ama-soft-banner {
+      background: linear-gradient(135deg, #58447D 0%, #7C63A8 55%, #A38BC8 100%);
+      border-radius: 22px;
+    }
+    .sidebar-pill-active {
+      background-color: #F3EBF9;
+      color: #4D387B;
+      font-weight: 700;
+      border: 1px solid #E4D8F3;
+    }
+    .tab-underline {
+      background-color: #F3EBF9;
+      color: #4D387B;
+      font-weight: 700;
+      border-color: #D7C5EE;
+    }
+    .locked-blur {
+      filter: blur(3.5px);
+      pointer-events: none;
+      user-select: none;
+    }
+    .space-node {
+      transition: all 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .space-node:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -10px rgba(95, 63, 144, 0.16);
+    }
+    .btn-whimsy {
+      transition: all 0.22s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .btn-whimsy:hover {
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- TOP BRAND & SUPABASE STATUS BAR -->
+  <div class="bg-aware-950 text-purple-100 text-[11px] py-2 px-4 border-b border-aware-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="px-2.5 py-0.5 rounded-full bg-aware-700 text-white font-mono font-semibold border border-purple-400/30">
+          AWAREMIND – YOUR PERSONAL GROWTH SPACE
+        </span>
+        <span class="hidden md:inline text-purple-200">
+          Discover Yourself. Develop Your Potential. Become Your Best Self.
+        </span>
+        <span class="hidden lg:inline text-purple-400">• Core Values: Learning, Sharing, and Caring</span>
+      </div>
+      <div class="flex items-center gap-3 font-mono">
+        <span>Kode Referral: <strong id="top-my-ref" class="text-coral-300">FATIH05</strong></span>
+        <span class="text-aware-600">|</span>
+        <button id="btn-switch-tier-demo" type="button" class="text-teal-100 hover:text-white underline font-semibold">
+          Status Akun: FREE ACCOUNT (Klik ke Premium)
+        </button>
+        <span class="text-aware-600">|</span>
+        <button id="btn-open-supabase" type="button" class="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-100 border border-teal-500/40 hover:bg-teal-500/30">
+          ⚡ Supabase DB Ready
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY HEADER (AMA-BUDDY STYLE) -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-30 border-b border-aware-200/70">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-aware-800 flex items-center justify-center text-white shadow-sm border border-aware-600">
+          <span class="font-display italic text-xl">♡</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-lg tracking-tight text-aware-950 leading-none">AWAREMIND</h1>
+            <span class="text-xs font-semibold text-aware-700 hidden sm:inline">Growth Space</span>
+            <span id="header-plan-badge" class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-aware-100 text-aware-800 border border-aware-200 font-semibold">
+              FREE ACCOUNT
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-0.5">A space to discover, learn, and grow • Learning, Sharing &amp; Caring</p>
+        </div>
+      </div>
+
+      <!-- Mobile & Tablet Navigation Pills -->
+      <nav class="flex lg:hidden flex-wrap items-center gap-1.5 text-xs" aria-label="Navigasi Mobile">
+        <button type="button" class="main-nav-btn tab-underline px-3 py-1.5 rounded-full border border-transparent transition-all" data-target="view-home">
+          5 Spaces
+        </button>
+        <button type="button" class="main-nav-btn px-3 py-1.5 rounded-full border border-transparent text-slate-600 transition-all" data-target="view-catalog">
+          Storefront (15 MVP)
+        </button>
+        <button type="button" class="main-nav-btn px-3 py-1.5 rounded-full border border-transparent text-slate-600 transition-all" data-target="view-journal">
+          Journaling
+        </button>
+        <button type="button" class="main-nav-btn px-3 py-1.5 rounded-full border border-transparent text-slate-600 transition-all" data-target="view-community">
+          100 Pembeli &amp; Referral
+        </button>
+        <button type="button" class="main-nav-btn px-3 py-1.5 rounded-full border border-transparent text-slate-600 transition-all" data-target="view-library">
+          Library &amp; Tim
+        </button>
+        <button type="button" class="main-nav-btn px-3 py-1.5 rounded-full border border-transparent text-slate-600 transition-all" data-target="view-ecosystem">
+          Ekosistem AMI
+        </button>
+      </nav>
+
+      <!-- Right User & Cart Controls -->
+      <div class="flex items-center gap-2">
+        <button id="btn-open-healmind-quick" type="button" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-coral-100 hover:bg-coral-300/50 text-coral-600 text-xs font-bold border border-coral-300 transition-all">
+          <span>♡</span>
+          <span>Heal Mind Support</span>
+        </button>
+        <button id="btn-open-account" type="button" class="px-3.5 py-1.5 rounded-full border border-aware-200 bg-aware-50 hover:bg-aware-100 text-xs font-semibold text-aware-900 transition-all">
+          Halo, <span id="header-user-name" class="font-bold">Fatih</span>
+        </button>
+        <button id="btn-header-upgrade" type="button" class="btn-whimsy px-4 py-1.5 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold shadow-sm">
+          Upgrade Premium
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN AMA-BUDDY LAYOUT: LEFT SIDEBAR + RIGHT CONTENT AREA -->
+  <div class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- LEFT SIDEBAR NAVIGATION (AMA-BUDDY SIGNATURE) -->
+    <aside class="hidden lg:block lg:col-span-3 sticky top-20 space-y-4">
+      <div class="ama-card p-4 space-y-2">
+        <div class="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+          Navigasi Growth Space
+        </div>
+        <button type="button" class="main-nav-btn sidebar-pill-active w-full text-left px-3.5 py-2.5 rounded-2xl text-xs flex items-center justify-between transition-all" data-target="view-home">
+          <span class="flex items-center gap-2.5"><span>⌂</span><span>1. Lima Ruang Utama</span></span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-aware-800 text-white">5 Spaces</span>
+        </button>
+        <button type="button" class="main-nav-btn w-full text-left px-3.5 py-2.5 rounded-2xl text-xs text-slate-600 hover:bg-aware-50 flex items-center justify-between transition-all" data-target="view-catalog">
+          <span class="flex items-center gap-2.5"><span>◈</span><span>2. E-Commerce Storefront</span></span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-teal-100 text-teal-600 font-bold">15 MVP</span>
+        </button>
+        <button type="button" class="main-nav-btn w-full text-left px-3.5 py-2.5 rounded-2xl text-xs text-slate-600 hover:bg-aware-50 flex items-center justify-between transition-all" data-target="view-journal">
+          <span class="flex items-center gap-2.5"><span>✎</span><span>3. Journaling &amp; Workspace</span></span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-aware-100 text-aware-800">Freemium</span>
+        </button>
+        <button type="button" class="main-nav-btn w-full text-left px-3.5 py-2.5 rounded-2xl text-xs text-slate-600 hover:bg-aware-50 flex items-center justify-between transition-all" data-target="view-community">
+          <span class="flex items-center gap-2.5"><span>✦</span><span>4. Program 100 Pembeli</span></span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-coral-100 text-coral-600 font-bold">68/100</span>
+        </button>
+        <button type="button" class="main-nav-btn w-full text-left px-3.5 py-2.5 rounded-2xl text-xs text-slate-600 hover:bg-aware-50 flex items-center justify-between transition-all" data-target="view-library">
+          <span class="flex items-center gap-2.5"><span>⌁</span><span>5. Growth Library &amp; Tim</span></span>
+          <span id="badge-library-count" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-aware-800 text-white font-bold">2</span>
+        </button>
+        <button type="button" class="main-nav-btn w-full text-left px-3.5 py-2.5 rounded-2xl text-xs text-slate-600 hover:bg-aware-50 flex items-center justify-between transition-all" data-target="view-ecosystem">
+          <span class="flex items-center gap-2.5"><span>♡</span><span>6. Ekosistem AwareMind</span></span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 text-amber-600 font-bold">6 Program</span>
+        </button>
+      </div>
+
+      <!-- Sidebar Quick Milestone Card (AMA-BUDDY Bottom Card Style) -->
+      <div class="ama-soft-banner p-4 text-white space-y-3 shadow-md">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-purple-200 font-bold">COMMUNITY MILESTONE</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/15 text-white">Batch Aktif</span>
+        </div>
+        <div>
+          <div class="text-xs font-bold">SELF-DISCOVERY WEBINAR</div>
+          <div class="text-[11px] text-purple-100 mt-0.5"><span id="sidebar-100-count">68</span>/100 pembeli terverifikasi</div>
+        </div>
+        <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+          <div id="sidebar-100-bar" class="h-full bg-coral-300 rounded-full transition-all" style="width: 68%"></div>
+        </div>
+        <p id="sidebar-100-caption" class="text-[11px] text-purple-100 leading-snug">
+          32 pembelian lagi menuju webinar gratis untuk seluruh anggota komunitas!
+        </p>
+      </div>
+
+      <!-- PKWH 3 Core Values Card -->
+      <div class="ama-card p-4 space-y-2.5 text-xs">
+        <div class="text-[10px] font-mono uppercase tracking-wider text-aware-700 font-bold">
+          Nilai Utama Bisnis PKWH 2026
+        </div>
+        <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100">
+          <div class="font-bold text-aware-900">1. PROFIT (Economic Value)</div>
+          <div class="text-[11px] text-slate-600">6 sumber pendapatan berkelanjutan (Toolkit, Class, Session, Premium, Partner, Special).</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-teal-50 border border-teal-100">
+          <div class="font-bold text-teal-600">2. PSYCHOLOGY (Psychological Value)</div>
+          <div class="text-[11px] text-slate-600">Pengembangan diri berbasis psikologi yang etis &amp; non-diagnostik.</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-coral-50 border border-coral-100">
+          <div class="font-bold text-coral-600">3. PEOPLE (Social Value)</div>
+          <div class="text-[11px] text-slate-600">Harga mahasiswa mulai Rp5.000, webinar komunitas 100 pembeli &amp; jalur kontribusi.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT AREA -->
+    <main class="lg:col-span-9 space-y-6">
+
+      <!-- =================================================================== -->
+      <!-- VIEW 1: HOMEPAGE — AMA-BUDDY HERO, 5 SPACES & 6-STAGE JOURNEY       -->
+      <!-- =================================================================== -->
+      <section id="view-home" class="space-y-6">
+        <!-- Hero Greeting Banner (AMA-BUDDY Purple Style) -->
+        <div class="ama-hero-banner p-6 sm:p-8 text-white space-y-6">
+          <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-center">
+            <div class="xl:col-span-7 space-y-4">
+              <div class="inline-flex flex-wrap items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-[11px] font-mono">
+                <span>AWAREMIND – YOUR PERSONAL GROWTH SPACE</span>
+                <span>•</span>
+                <span class="text-coral-300 font-semibold">Learning, Sharing, and Caring</span>
+              </div>
+
+              <div class="space-y-1.5">
+                <p class="text-xs font-mono uppercase tracking-[0.14em] text-purple-200 font-semibold">
+                  YOU DON'T HAVE TO BE PERFECT TO GROW.
+                </p>
+                <h2 class="font-display text-3xl sm:text-4xl font-semibold leading-tight text-white">
+                  You just need a space <span class="italic text-coral-300">to start.</span>
+                </h2>
+                <p class="text-sm font-medium text-purple-100">
+                  A space to discover, learn, and grow.
+                </p>
+              </div>
+
+              <p class="text-xs sm:text-sm text-purple-100/95 leading-relaxed">
+                <strong class="text-white">Discover Yourself. Develop Your Potential. Become Your Best Self.</strong> Satu ekosistem pengembangan diri anak muda yang menggabungkan <em>Growth Toolkit</em> (Rp5.000–Rp10.000), <em>Growth Class</em>, <em>1-on-1 Growth Session</em>, <em>Journaling</em> harian, dan komunitas.
+              </p>
+
+              <!-- AMA-BUDDY Style Quick Action Capsule Pills -->
+              <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                <button id="hero-btn-explore" type="button" class="btn-whimsy px-5 py-2.5 rounded-full bg-white text-aware-900 font-bold text-xs shadow-md hover:bg-purple-50">
+                  Explore Your Space (15 Produk MVP) →
+                </button>
+                <button id="hero-btn-journal" type="button" class="btn-whimsy px-4 py-2.5 rounded-full bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/25">
+                  ✎ Mulai Daily Journaling Gratis
+                </button>
+                <button id="hero-btn-ecosystem" type="button" class="btn-whimsy px-4 py-2.5 rounded-full bg-coral-300/25 hover:bg-coral-300/35 text-coral-100 font-semibold text-xs border border-coral-300/40">
+                  ♡ Program AwareMind Indonesia
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Hero Card: 6-Stage User Journey -->
+            <div class="xl:col-span-5 bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 space-y-3">
+              <div class="flex items-center justify-between border-b border-white/15 pb-2.5">
+                <div>
+                  <span class="text-[10px] font-mono uppercase tracking-widest text-coral-300 font-bold">ALUR PERJALANAN PENGGUNA</span>
+                  <h3 class="font-bold text-sm text-white">One Platform. Five Spaces. Endless Possibilities.</h3>
+                </div>
+                <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-teal-500/30 text-teal-100 border border-teal-400/30">6 Tahap</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-[11px]">
+                <div class="p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <div class="font-mono font-bold text-coral-300">01. DISCOVER</div>
+                  <div class="text-purple-100 mt-0.5">Kenal AwareMind lewat sosmed &amp; komunitas</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <div class="font-mono font-bold text-teal-100">02. EXPLORE</div>
+                  <div class="text-purple-100 mt-0.5">Buat akun gratis &amp; pilih 1 dari 5 ruang</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <div class="font-mono font-bold text-amber-100">03. LEARN</div>
+                  <div class="text-purple-100 mt-0.5">Pakai fitur gratis, beli Toolkit / ikut Class</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <div class="font-mono font-bold text-purple-200">04. GROW</div>
+                  <div class="text-purple-100 mt-0.5">Upgrade Premium atau 1-on-1 Growth Session</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <div class="font-mono font-bold text-coral-300">05. CONNECT</div>
+                  <div class="text-purple-100 mt-0.5">Masuk WA grup tema &amp; Webinar 100 Pembeli</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <div class="font-mono font-bold text-teal-100">06. CONTRIBUTE</div>
+                  <div class="text-purple-100 mt-0.5">Jadi Volunteer, Collaborator, atau AMA</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 AMA-BUDDY STAT CARDS -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div class="ama-card p-4">
+            <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">LIMA RUANG TUMBUH</div>
+            <div class="text-2xl font-extrabold text-aware-800 mt-1">5 Spaces</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Self • Purpose • Brain • Future • Create</div>
+          </div>
+          <div class="ama-card p-4">
+            <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">PRIORITAS PELUNCURAN</div>
+            <div class="text-2xl font-extrabold text-teal-600 mt-1">15 Produk</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">3 Produk Unggulan per Ruang</div>
+          </div>
+          <div class="ama-card p-4">
+            <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">TARGET WEBINAR GRATIS</div>
+            <div class="text-2xl font-extrabold text-coral-500 mt-1"><span id="stat-card-100">68</span>/100</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Self-Discovery Webinar Batch 1</div>
+          </div>
+          <div class="ama-card p-4">
+            <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">HARGA MULAI</div>
+            <div class="text-2xl font-extrabold text-aware-900 mt-1">Rp5.000</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">Ramah Pelajar &amp; Mahasiswa</div>
+          </div>
+        </div>
+
+        <!-- Daily Reminder / Supporting Tagline Strip -->
+        <div class="ama-card px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 bg-aware-50/70">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-full bg-aware-100 text-aware-800 font-bold border border-aware-200">
+              Supporting Tagline
+            </span>
+            <span id="supporting-quote-display" class="font-display italic text-base sm:text-lg text-aware-950">
+              "Start where you are. Grow at your own pace."
+            </span>
+          </div>
+          <button id="btn-next-quote" type="button" class="px-3 py-1 rounded-full bg-white border border-aware-200 text-xs font-bold text-aware-800 hover:bg-aware-100 transition-colors">
+            Ganti Pesan Semangat ↻
+          </button>
+        </div>
+
+        <!-- FIND YOUR GROWTH SPACE (5 SPACES SELECTOR) -->
+        <div class="space-y-3.5">
+          <div class="flex flex-wrap items-end justify-between gap-2">
+            <div>
+              <span class="text-[11px] font-mono uppercase tracking-widest text-aware-700 font-bold">1. STRUKTUR UTAMA AWAREMIND GROWTH SPACE</span>
+              <h3 class="font-display text-2xl sm:text-3xl text-aware-950 mt-0.5">
+                01. SELF SPACE · 02. PURPOSE · 03. BRAIN BOOST · 04. FUTURE READY · 05. CREATE
+              </h3>
+            </div>
+            <span class="text-xs text-slate-500">Klik ruang untuk melihat Toolkit, Class, Mentoring &amp; Fitur Web</span>
+          </div>
+
+          <div id="home-spaces-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3"></div>
+        </div>
+
+        <!-- SELECTED SPACE COMPLETE DETAIL SHOWCASE -->
+        <div id="home-space-detail" class="ama-card p-6 space-y-5 border-t-4 border-t-aware-800"></div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 2: E-COMMERCE STOREFRONT (15 PRIORITY MVP + CLASSES & SESSIONS)-->
+      <!-- =================================================================== -->
+      <section id="view-catalog" class="hidden space-y-6">
+        <div class="ama-card p-6 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-aware-100 pb-4">
+            <div>
+              <span class="text-[11px] font-mono uppercase text-aware-700 font-bold">2. SISTEM PRODUK &amp; PRIORITAS PELUNCURAN (15 PRODUK UNGGULAN)</span>
+              <h2 class="font-display text-2xl sm:text-3xl text-aware-950 mt-0.5">AwareMind Digital Storefront</h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Pilih <strong>Growth Toolkit</strong> (Rp5.000–Rp10.000), <strong>Growth Class</strong> (Gratis/Berbayar), atau <strong>Growth Session</strong> (1-on-1 ~Rp100.000 opsional). Gunakan kode referral untuk diskon 5%.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="filter-space" aria-label="Filter Ruang" class="text-xs border border-aware-200 rounded-full px-4 py-2 bg-aware-50 font-semibold text-aware-900">
+                <option value="ALL">Semua 5 Ruang</option>
+                <option value="1">01. SELF SPACE (Kenali Diri)</option>
+                <option value="2">02. PURPOSE (Temukan Arah)</option>
+                <option value="3">03. BRAIN BOOST (Kembangkan Ilmu)</option>
+                <option value="4">04. FUTURE READY (Siapkan Masa Depan)</option>
+                <option value="5">05. CREATE (Ekspresikan Potensi)</option>
+              </select>
+              <select id="filter-type" aria-label="Filter Jenis Layanan" class="text-xs border border-aware-200 rounded-full px-4 py-2 bg-aware-50 font-semibold text-aware-900">
+                <option value="ALL">Semua Jenis Layanan</option>
+                <option value="mvp">★ 15 Produk Prioritas Peluncuran (MVP)</option>
+                <option value="toolkit">A. Growth Toolkit (Rp5rb–Rp10rb)</option>
+                <option value="class">B. Growth Class (Kelas / Workshop)</option>
+                <option value="session">C. Growth Session (1-on-1 Mentoring)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="catalog-products-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 3: JOURNALING, MOOD TRACKER & INTERACTIVE 5-SPACE TOOLS        -->
+      <!-- =================================================================== -->
+      <section id="view-journal" class="hidden space-y-6">
+        <!-- Freemium Status & Ethical Disclaimer Banner -->
+        <div class="ama-card p-4 flex flex-wrap items-center justify-between gap-3 bg-aware-50 border-aware-200">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-aware-800 text-white flex items-center justify-center font-bold text-base">✎</div>
+            <div>
+              <div class="text-xs font-bold text-aware-950">
+                3. Sistem Akun Website: <span id="journal-tier-text" class="text-aware-700">FREE ACCOUNT (Daily Journaling, Mood Check-in &amp; Grafik Dasar Terbuka)</span>
+              </div>
+              <p class="text-[11px] text-slate-600 mt-0.5">
+                <strong>Catatan Etis:</strong> Mood tracker dan grafik digunakan sebagai alat refleksi pribadi, bukan untuk mendiagnosis kondisi psikologis.
+              </p>
+            </div>
+          </div>
+          <button id="btn-journal-upgrade" type="button" class="px-4 py-2 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold shadow-sm">
+            Upgrade Premium Membership (Rp15.000)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left 6 Cols: Free Daily Journaling, Mood Check-in & Simple Mood Chart -->
+          <div class="lg:col-span-6 ama-card p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-aware-100 pb-3">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-teal-600 font-bold">FREE ACCOUNT • SELF SPACE</span>
+                <h2 class="font-display text-2xl text-aware-950">Daily Journaling &amp; Mood Check-in</h2>
+              </div>
+              <span class="text-xs font-mono text-slate-400">13 Nov 2026</span>
+            </div>
+
+            <form id="form-free-journal" class="space-y-4 text-xs">
+              <div>
+                <label class="block font-bold text-slate-700 mb-2">Bagaimana suasana hatimu hari ini? (Skala 1–5):</label>
+                <div class="grid grid-cols-5 gap-2" id="mood-selector-group">
+                  <button type="button" class="mood-btn p-2.5 rounded-2xl border border-aware-200 text-center hover:border-aware-700 transition-all" data-score="1">
+                    <div class="text-base font-mono font-bold text-coral-600">1</div>
+                    <div class="text-[10px] text-slate-500">Berat</div>
+                  </button>
+                  <button type="button" class="mood-btn p-2.5 rounded-2xl border border-aware-200 text-center hover:border-aware-700 transition-all" data-score="2">
+                    <div class="text-base font-mono font-bold text-amber-600">2</div>
+                    <div class="text-[10px] text-slate-500">Lelah</div>
+                  </button>
+                  <button type="button" class="mood-btn p-2.5 rounded-2xl border border-aware-200 text-center hover:border-aware-700 transition-all" data-score="3">
+                    <div class="text-base font-mono font-bold text-slate-700">3</div>
+                    <div class="text-[10px] text-slate-500">Cukup</div>
+                  </button>
+                  <button type="button" class="mood-btn p-2.5 rounded-2xl border-2 border-aware-800 bg-aware-100 text-center font-bold transition-all" data-score="4">
+                    <div class="text-base font-mono font-bold text-aware-900">4</div>
+                    <div class="text-[10px] text-aware-900">Tenang</div>
+                  </button>
+                  <button type="button" class="mood-btn p-2.5 rounded-2xl border border-aware-200 text-center hover:border-aware-700 transition-all" data-score="5">
+                    <div class="text-base font-mono font-bold text-teal-600">5</div>
+                    <div class="text-[10px] text-slate-500">Bertumbuh</div>
+                  </button>
+                </div>
+              </div>
+
+              <div class="p-3.5 rounded-2xl bg-aware-50 border border-aware-200 flex items-center justify-between gap-3">
+                <div>
+                  <div class="font-bold text-aware-950">Journaling Prompts (Refleksi Terarah)</div>
+                  <div id="active-prompt-text" class="text-[11px] text-slate-600 mt-0.5">
+                    "Hal kecil apa yang patut kamu apresiasi dari dirimu hari ini?"
+                  </div>
+                </div>
+                <button id="btn-use-pro-prompt" type="button" class="px-3.5 py-1.5 rounded-full bg-white border border-aware-200 hover:border-aware-700 text-aware-900 font-bold text-[11px] shrink-0">
+                  🔒 Prompt Premium
+                </button>
+              </div>
+
+              <div>
+                <label for="journal-entry-input" class="block font-bold text-slate-700 mb-1.5">Catatan Jurnal &amp; Refleksi Harianmu:</label>
+                <textarea id="journal-entry-input" rows="3" required class="w-full p-3.5 rounded-2xl border border-aware-200 bg-canvas focus:bg-white focus:outline-none focus:border-aware-800 transition-colors" placeholder="Tulis refleksi jujurmu hari ini tanpa perlu merasa sempurna...">Hari ini mulai menyusun langkah belajar dan merapikan prioritas semester ini pelan-pelan.</textarea>
+              </div>
+
+              <button type="submit" class="btn-whimsy w-full py-3 px-4 rounded-full bg-aware-800 hover:bg-aware-700 text-white font-bold shadow-sm">
+                Simpan Jurnal &amp; Mood Check-in
+              </button>
+            </form>
+
+            <!-- Free Account Simple Mood History & Chart -->
+            <div class="pt-3 border-t border-aware-100 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-aware-950">Grafik Suasana Hati Sederhana (Free Account):</span>
+                <span class="text-[10px] font-mono text-teal-600 font-semibold">Non-Diagnostik</span>
+              </div>
+              <div class="relative h-44 w-full bg-aware-50/50 p-2 rounded-2xl border border-aware-100">
+                <canvas id="growthJourneyChart"></canvas>
+              </div>
+              <div class="text-xs font-bold text-aware-950 pt-1">Riwayat Jurnal &amp; Mood Check-in:</div>
+              <div id="journal-history-container" class="space-y-2 max-h-44 overflow-y-auto text-xs"></div>
+            </div>
+          </div>
+
+          <!-- Right 6 Cols: Premium Personal Growth Dashboard (Goal, Vision Board & Habit Tracker) -->
+          <div class="lg:col-span-6 ama-card p-6 relative overflow-hidden flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between border-b border-aware-100 pb-3">
+              <div>
+                <span id="journey-lock-tag" class="text-[10px] font-mono uppercase text-aware-700 font-bold">FITUR PREMIUM MEMBERSHIP</span>
+                <h2 class="font-display text-2xl text-aware-950">Personal Growth Dashboard &amp; Habit Tracker</h2>
+              </div>
+              <button id="btn-export-journal" type="button" class="px-3.5 py-1.5 rounded-full border border-aware-200 text-xs font-bold text-aware-900 hover:bg-aware-50">
+                Unduh Laporan Pola Mood
+              </button>
+            </div>
+
+            <div id="pro-journey-content" class="locked-blur space-y-4 transition-all">
+              <!-- Laporan Pola Suasana Hati -->
+              <div class="p-3.5 rounded-2xl bg-aware-50 border border-aware-200 space-y-1 text-xs">
+                <div class="font-bold text-aware-900">Insight Pola Suasana Hati Mingguan (Premium):</div>
+                <p class="text-slate-600 text-[11px]">
+                  Suasana hatimu cenderung meningkat pada hari ketika kamu menyelesaikan target belajar singkat (20–45 menit) dan menulis refleksi malam sebelum pukul 22.00.
+                </p>
+              </div>
+
+              <!-- Digital Vision Board & Personal Goal Tracker (Ruang PURPOSE) -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-aware-950">Personal Goal &amp; Digital Vision Board (Ruang PURPOSE):</span>
+                  <span class="text-[10px] font-mono text-teal-600 font-bold">Aktif</span>
+                </div>
+                <div id="vision-goals-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
+                <form id="form-add-goal" class="flex gap-2 pt-1">
+                  <input id="input-new-goal" type="text" placeholder="Tambah target baru (misal: Lulus Beasiswa 2027)..." class="flex-1 px-3 py-2 rounded-xl border border-aware-200 text-xs bg-canvas" />
+                  <button type="submit" class="px-3.5 py-2 rounded-xl bg-aware-800 text-white text-xs font-bold">+ Target</button>
+                </form>
+              </div>
+
+              <!-- Habit Tracker Lanjutan Across 5 Spaces -->
+              <div class="space-y-2">
+                <div class="text-xs font-bold text-aware-950">Habit Tracker Lanjutan 5 Ruang:</div>
+                <div id="pro-habits-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
+              </div>
+            </div>
+
+            <!-- Paywall Overlay for Free Account -->
+            <div id="pro-paywall-overlay" class="absolute inset-x-4 bottom-4 top-20 bg-aware-950/90 backdrop-blur-sm rounded-2xl p-6 text-white flex flex-col items-center justify-center text-center space-y-3.5 z-10">
+              <div class="w-12 h-12 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center text-coral-300 text-xl">
+                ✦
+              </div>
+              <h3 class="font-display text-2xl">Buka Premium Personal Growth Space</h3>
+              <p class="text-xs text-purple-100 max-w-md leading-relaxed">
+                Akun <strong>Free Account</strong> sudah mencakup <em>Daily Journaling</em>, <em>Mood Check-in</em>, dan <em>Grafik Sederhana</em>. Upgrade ke <strong>Premium Membership (Rp15.000)</strong> atau beli produk apa saja untuk membuka <strong>Laporan Pola Emosi, Digital Vision Board, Goal Tracker, &amp; Koleksi Journaling Prompts 5 Ruang</strong>.
+              </p>
+              <div class="flex flex-wrap justify-center gap-2.5 pt-1">
+                <button id="btn-overlay-upgrade" type="button" class="btn-whimsy px-5 py-2.5 rounded-full bg-coral-500 hover:bg-coral-600 text-white font-bold text-xs shadow-md">
+                  Upgrade Premium (Rp15.000)
+                </button>
+                <button id="btn-overlay-catalog" type="button" class="btn-whimsy px-5 py-2.5 rounded-full bg-white/15 hover:bg-white/25 text-white font-semibold text-xs border border-white/25">
+                  Belanja Toolkit Mulai Rp5.000
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 4: GROWTH COMMUNITY (100 PEMBELI) & REFERRAL PROGRAM (5%)      -->
+      <!-- =================================================================== -->
+      <section id="view-community" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left 7 Cols: Program 100 Pembeli -->
+          <div class="lg:col-span-7 ama-card p-6 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-aware-100 pb-3">
+              <div>
+                <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">4. GROWTH COMMUNITY &amp; PROGRAM 100 PEMBELI</span>
+                <h2 class="font-display text-2xl text-aware-950">Progress Bar Menuju Webinar Gratis</h2>
+                <p class="text-xs text-slate-500">
+                  Setiap transaksi berhasil mendapat undangan Grup WhatsApp tema produk. Jika mencapai <strong>100 pembeli valid per tema/batch</strong>, AwareMind mengadakan webinar gratis!
+                </p>
+              </div>
+              <button id="btn-simulate-100" type="button" class="btn-whimsy px-4 py-2 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold shadow-sm">
+                ⚡ Simulasikan 100/100 Pembeli
+              </button>
+            </div>
+            <div id="growth-together-list" class="space-y-3.5"></div>
+          </div>
+
+          <!-- Right 5 Cols: Growth Referral 5% -->
+          <div class="lg:col-span-5 ama-card p-6 space-y-4 border-t-4 border-t-coral-500">
+            <div class="border-b border-aware-100 pb-3">
+              <span class="text-[10px] font-mono uppercase text-coral-600 font-bold">5. REFERRAL PROGRAM • DISKON 5%</span>
+              <h2 class="font-display text-2xl text-aware-950">Kode Referral Pribadimu</h2>
+              <p class="text-xs text-slate-500">
+                Bagikan kodemu kepada teman. Teman yang memakai kode saat checkout otomatis mendapat <strong>diskon 5%</strong> dan tercatat di sistem.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-2xl bg-aware-900 text-white space-y-2 text-center shadow-inner">
+              <div class="text-[11px] text-purple-200">Kode Referral Akunmu:</div>
+              <div id="referral-card-code" class="font-mono font-extrabold text-3xl text-coral-300 tracking-widest">FATIH05</div>
+              <div class="pt-2">
+                <button id="btn-copy-ref" type="button" class="btn-whimsy px-5 py-2 rounded-full bg-white text-aware-950 font-bold text-xs hover:bg-purple-50">
+                  Salin Kode Referral
+                </button>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-aware-50 border border-aware-200 space-y-2 text-xs">
+              <div class="font-bold text-aware-950">Daftar Kode Teman Satu Tim (Uji Coba Checkout -5%):</div>
+              <div class="grid grid-cols-2 gap-2 font-mono text-[11px]">
+                <div class="p-2.5 rounded-xl bg-white border border-aware-100"><strong>SOFI05</strong> (Diskon 5%)</div>
+                <div class="p-2.5 rounded-xl bg-white border border-aware-100"><strong>ALDO05</strong> (Diskon 5%)</div>
+                <div class="p-2.5 rounded-xl bg-white border border-aware-100"><strong>HANI05</strong> (Diskon 5%)</div>
+                <div class="p-2.5 rounded-xl bg-white border border-aware-100"><strong>HIKMA05</strong> (Diskon 5%)</div>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-teal-50 border border-teal-100 text-xs flex items-center justify-between">
+              <span class="font-bold text-teal-600">Total Transaksi Referral Tercatat:</span>
+              <span id="referral-total-count" class="font-mono font-extrabold text-sm text-teal-600">18 Transaksi Sah</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 5: MY GROWTH LIBRARY, 7 TEAM LEADS & 6 REVENUE STREAMS         -->
+      <!-- =================================================================== -->
+      <section id="view-library" class="hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left 6 Cols: My Growth Library + WA Community Access -->
+          <div class="lg:col-span-6 ama-card p-6 space-y-4">
+            <div class="border-b border-aware-100 pb-3">
+              <span class="text-[10px] font-mono uppercase text-teal-600 font-bold">KOLEKSI PRODUK &amp; GRUP KOMUNITAS</span>
+              <h2 class="font-display text-2xl text-aware-950">My Growth Library</h2>
+              <p class="text-xs text-slate-500">
+                Akses seluruh Toolkit, Class, jadwal Mentoring, serta undangan Grup WhatsApp tema produk yang sudah kamu beli.
+              </p>
+            </div>
+            <div id="library-items-container" class="space-y-3"></div>
+          </div>
+
+          <!-- Right 6 Cols: 7 Team Leads, 6 Revenue Streams & 3-Phase Roadmap -->
+          <div class="lg:col-span-6 ama-card p-6 space-y-4">
+            <div class="border-b border-aware-100 pb-3">
+              <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">8, 9 &amp; 10. PENDAPATAN, TIM 7 ORANG &amp; ROADMAP</span>
+              <h2 class="font-display text-2xl text-aware-950">Struktur Tim &amp; Keuangan PKWH</h2>
+            </div>
+
+            <!-- Financial Summary -->
+            <div class="grid grid-cols-3 gap-2.5 text-center font-mono text-xs">
+              <div class="p-3 rounded-2xl bg-aware-50 border border-aware-200">
+                <div class="text-[10px] text-slate-500">Omzet Kotor</div>
+                <div id="fin-gross" class="font-extrabold text-sm text-aware-950 mt-0.5">Rp 1.485.000</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-coral-50 border border-coral-100">
+                <div class="text-[10px] text-slate-500">Diskon Referral 5%</div>
+                <div id="fin-discount" class="font-extrabold text-sm text-coral-600 mt-0.5">-Rp 24.500</div>
+              </div>
+              <div class="p-3 rounded-2xl bg-teal-50 border border-teal-100">
+                <div class="text-[10px] text-slate-500">Kas Bersih Tim</div>
+                <div id="fin-net" class="font-extrabold text-sm text-teal-600 mt-0.5">Rp 1.450.105</div>
+              </div>
+            </div>
+
+            <!-- 7 Team Leads -->
+            <div class="space-y-1.5 text-xs">
+              <div class="font-bold text-aware-950">10. Pembagian Tugas 7 Anggota Tim:</div>
+              <div class="grid grid-cols-1 gap-1.5 max-h-56 overflow-y-auto pr-1">
+                <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>1. SELF SPACE LEAD:</strong> Produk, materi, &amp; kelas ruang <em>01. SELF SPACE</em>.</div>
+                <div class="p-2.5 rounded-xl bg-teal-50 border border-teal-100"><strong>2. PURPOSE LEAD:</strong> Produk, materi, &amp; kelas ruang <em>02. PURPOSE</em>.</div>
+                <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>3. BRAIN BOOST LEAD:</strong> Produk, materi, &amp; kelas ruang <em>03. BRAIN BOOST</em>.</div>
+                <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-100"><strong>4. FUTURE READY LEAD:</strong> Produk, materi, &amp; kelas ruang <em>04. FUTURE READY</em>.</div>
+                <div class="p-2.5 rounded-xl bg-coral-50 border border-coral-100"><strong>5. CREATE LEAD:</strong> Produk, materi, &amp; kelas ruang <em>05. CREATE</em>.</div>
+                <div class="p-2.5 rounded-xl bg-slate-100 border border-slate-200"><strong>6. WEBSITE &amp; TECHNOLOGY LEAD:</strong> Website, sistem akun, katalog, transaksi Supabase &amp; fitur digital.</div>
+                <div class="p-2.5 rounded-xl bg-slate-100 border border-slate-200"><strong>7. FINANCE &amp; BUSINESS ADMIN:</strong> Modal, HPP, harga jual, transaksi, &amp; pencatatan keuangan.</div>
+              </div>
+            </div>
+
+            <!-- 3-Phase Website Roadmap -->
+            <div class="pt-2 border-t border-aware-100 space-y-2 text-xs">
+              <div class="font-bold text-aware-950">9. Rencana Pengembangan Bertahap Website:</div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-200">
+                  <div class="font-mono font-bold text-aware-800">PHASE 1 — MVP</div>
+                  <div class="text-slate-600 mt-0.5">Homepage, Auth, 5 Ruang, Katalog 15 Produk, Basic Journaling &amp; Mood Check-in.</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-teal-50 border border-teal-100">
+                  <div class="font-mono font-bold text-teal-600">PHASE 2 — GROWTH</div>
+                  <div class="text-slate-600 mt-0.5">Grafik Mood, Personal Dashboard, Goal &amp; Habit Tracker, Premium, Referral &amp; Counter 100.</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-coral-50 border border-coral-100">
+                  <div class="font-mono font-bold text-coral-600">PHASE 3 — ECOSYSTEM</div>
+                  <div class="text-slate-600 mt-0.5">Community Showcase, Opportunity Board &amp; Pendaftaran Program AwareMind.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 6: INTEGRASI DENGAN PROGRAM AWAREMIND INDONESIA (6 PROGRAMS)   -->
+      <!-- =================================================================== -->
+      <section id="view-ecosystem" class="hidden space-y-6">
+        <div class="ama-card p-6 space-y-5">
+          <div class="border-b border-aware-100 pb-4">
+            <span class="text-[11px] font-mono uppercase text-aware-700 font-bold">6. INTEGRASI DENGAN EKOSISTEM AWAREMIND INDONESIA</span>
+            <h2 class="font-display text-2xl sm:text-3xl text-aware-950 mt-0.5">Dari Pembeli Produk Menjadi Bagian dari Komunitas</h2>
+            <p class="text-xs text-slate-600 mt-1">
+              AwareMind Growth Space menjadi pintu masuk bagi pengguna untuk mengenal dan berkontribusi di ekosistem AwareMind Indonesia. <em>Catatan: Keikutsertaan program mengikuti ketentuan, kapasitas, dan seleksi masing-masing; pembelian produk tidak otomatis menjamin penerimaan sebagai ambassador atau volunteer.</em>
+            </p>
+          </div>
+
+          <div id="ecosystem-programs-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-aware-200/80 py-6 px-4 text-center text-xs text-slate-500 mt-8">
+    <div class="max-w-5xl mx-auto space-y-1.5">
+      <p class="font-bold text-aware-900">One platform. Five spaces. Endless possibilities to grow.</p>
+      <p><strong>Batasan Etis Psikologi:</strong> Mood tracker, grafik, serta seluruh produk di AwareMind Growth Space digunakan sebagai alat refleksi pribadi dan edukasi pengembangan diri, bukan untuk mendiagnosis kondisi psikologis atau menggantikan konseling klinis profesional.</p>
+      <p class="text-[11px] font-mono text-slate-400">AwareMind – Your Personal Growth Space • YOU DON'T HAVE TO BE PERFECT TO GROW. You just need a space to start.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL 1: CHECKOUT & REFERRAL -->
+  <div id="modal-checkout" class="fixed inset-0 bg-aware-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-aware-200">
+      <div class="flex items-center justify-between border-b border-aware-100 pb-3">
+        <div>
+          <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">Checkout QRIS &amp; Growth Referral</span>
+          <h3 id="checkout-item-title" class="font-display text-2xl text-aware-950">Produk</h3>
+        </div>
+        <button id="btn-close-checkout" type="button" class="text-slate-400 hover:text-slate-700 font-bold px-2">✕</button>
+      </div>
+
+      <div id="checkout-session-slot-box" class="hidden p-3.5 rounded-2xl bg-aware-50 border border-aware-200 space-y-1.5 text-xs">
+        <label for="checkout-slot-select" class="block font-bold text-aware-900">Pilih Jadwal 1-on-1 Growth Session (Opsional):</label>
+        <select id="checkout-slot-select" class="w-full px-3 py-2 rounded-xl border border-aware-200 bg-white">
+          <option value="Sabtu, 16.00 - 17.00 WIB">Sabtu, 16.00 – 17.00 WIB (Tersisa 2 Kuota)</option>
+          <option value="Minggu, 10.00 - 11.00 WIB">Minggu, 10.00 – 11.00 WIB (Tersisa 1 Kuota)</option>
+          <option value="Selasa, 19.30 - 20.30 WIB">Selasa, 19.30 – 20.30 WIB (Tersisa 2 Kuota)</option>
+        </select>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-canvas border border-aware-200 space-y-2 text-xs">
+        <label for="input-ref-code" class="block font-bold text-slate-700">Gunakan Kode Referral Teman (Diskon 5%):</label>
+        <div class="flex gap-2">
+          <input id="input-ref-code" type="text" placeholder="Contoh: SOFI05" class="flex-1 px-3 py-2 rounded-xl border border-aware-200 uppercase font-mono bg-white" />
+          <button id="btn-apply-ref" type="button" class="px-4 py-2 rounded-xl bg-aware-800 hover:bg-aware-700 text-white font-bold">
+            Pakai
+          </button>
+        </div>
+        <div id="ref-feedback-msg" class="text-[11px] text-slate-500">
+          Ketik <strong>SOFI05</strong> atau <strong>ALDO05</strong> untuk diskon 5%.
+        </div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-aware-950 text-white space-y-1.5 font-mono text-xs">
+        <div class="flex justify-between">
+          <span class="text-purple-200">Harga Produk:</span>
+          <span id="checkout-base-price">Rp 10.000</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-purple-200">Diskon Referral (5%):</span>
+          <span id="checkout-discount-amount" class="text-teal-100">-Rp 0</span>
+        </div>
+        <div class="border-t border-white/15 pt-2 flex justify-between text-sm font-bold">
+          <span class="font-sans">Total Pembayaran QRIS:</span>
+          <span id="checkout-final-price" class="text-coral-300">Rp 10.000</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button id="btn-cancel-checkout" type="button" class="flex-1 py-2.5 rounded-full border border-aware-200 text-slate-700 font-bold text-xs hover:bg-aware-50">
+          Batal
+        </button>
+        <button id="btn-confirm-checkout" type="button" class="flex-1 py-2.5 rounded-full bg-aware-800 hover:bg-aware-700 text-white font-bold text-xs shadow-md">
+          ✓ Bayar &amp; Masuk Komunitas WA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: PREVIEW PRODUK -->
+  <div id="modal-preview" class="fixed inset-0 bg-aware-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-aware-200">
+      <div class="flex items-center justify-between border-b border-aware-100 pb-3">
+        <div>
+          <span id="preview-type-badge" class="text-[10px] font-mono uppercase text-aware-700 font-bold">PRATINJAU PRODUK</span>
+          <h3 id="preview-title" class="font-display text-2xl text-aware-950">Pratinjau</h3>
+        </div>
+        <button id="btn-close-preview" type="button" class="text-slate-400 hover:text-slate-700 font-bold px-2">✕</button>
+      </div>
+      <div id="preview-body" class="p-4 rounded-2xl bg-aware-50 border border-aware-100 text-xs text-slate-700 leading-relaxed space-y-2"></div>
+      <div class="flex justify-end gap-2">
+        <button id="btn-close-preview-2" type="button" class="px-4 py-2 rounded-full border border-aware-200 text-xs font-bold text-slate-700">
+          Tutup
+        </button>
+        <button id="btn-buy-from-preview" type="button" class="px-5 py-2 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold">
+          Beli &amp; Dapatkan Undangan WA →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: ACCOUNT -->
+  <div id="modal-account" class="fixed inset-0 bg-aware-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl border border-aware-200">
+      <div class="flex items-center justify-between border-b border-aware-100 pb-3">
+        <h3 class="font-display text-2xl text-aware-950">Profil Akun AwareMind</h3>
+        <button id="btn-close-account" type="button" class="text-slate-400 hover:text-slate-700 font-bold px-2">✕</button>
+      </div>
+      <form id="form-account" class="space-y-3 text-xs">
+        <div>
+          <label for="input-user-name" class="block font-bold text-slate-700 mb-1">Nama Pengguna (Otomatis Membuat Kode Referral [NAMA]05):</label>
+          <input id="input-user-name" type="text" required value="Fatih" class="w-full px-3.5 py-2.5 rounded-xl border border-aware-200" />
+        </div>
+        <button type="submit" class="w-full py-2.5 rounded-full bg-aware-800 text-white font-bold">
+          Simpan Profil &amp; Update Kode
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: SUPABASE E-COMMERCE SQL SCHEMA -->
+  <div id="modal-supabase" class="fixed inset-0 bg-aware-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 space-y-4 shadow-2xl border border-aware-200">
+      <div class="flex items-center justify-between border-b border-aware-100 pb-3">
+        <div>
+          <span class="text-[10px] font-mono uppercase text-teal-600 font-bold">SUPABASE POSTGRESQL + RLS SCHEMA</span>
+          <h3 class="font-display text-2xl text-aware-950">Skema Database E-Commerce AwareMind Growth Space</h3>
+        </div>
+        <button id="btn-close-supabase" type="button" class="text-slate-400 hover:text-slate-700 font-bold px-2">✕</button>
+      </div>
+      <p class="text-xs text-slate-600">
+        Salin dan jalankan skrip SQL di bawah ini pada <strong>Supabase SQL Editor</strong> untuk mengaktifkan tabel akun Freemium, katalog 5 Ruang, transaksi QRIS + referral 5%, penghitung otomatis 100 pembeli, dan jurnal pribadi berproteksi RLS:
+      </p>
+      <pre id="supabase-sql-code" class="p-4 rounded-2xl bg-aware-950 text-purple-100 font-mono text-[11px] overflow-x-auto max-h-72 leading-relaxed">-- AWAREMIND GROWTH SPACE — SUPABASE E-COMMERCE SCHEMA
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  full_name TEXT NOT NULL,
+  plan_tier TEXT DEFAULT 'free' CHECK (plan_tier IN ('free', 'premium')),
+  referral_code TEXT UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.products (
+  id TEXT PRIMARY KEY,
+  space_code TEXT NOT NULL, -- SELF_SPACE, PURPOSE, BRAIN_BOOST, FUTURE_READY, CREATE
+  service_type TEXT NOT NULL CHECK (service_type IN ('toolkit', 'class', 'session')),
+  title TEXT NOT NULL,
+  price_idr INT NOT NULL,
+  is_priority_mvp BOOLEAN DEFAULT true,
+  whatsapp_group_url TEXT,
+  sold_verified_count INT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS public.orders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  buyer_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  product_id TEXT REFERENCES public.products(id),
+  referral_used TEXT,
+  discount_idr INT DEFAULT 0,
+  final_paid_idr INT NOT NULL,
+  status TEXT DEFAULT 'paid' CHECK (status IN ('paid', 'cancelled', 'refunded')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.daily_journals (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  space_code TEXT DEFAULT 'SELF_SPACE',
+  mood_score INT CHECK (mood_score BETWEEN 1 AND 5),
+  journal_text TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.daily_journals ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (auth.uid() = user_id);</pre>
+      <div class="flex justify-end gap-2">
+        <button id="btn-copy-sql" type="button" class="px-4 py-2 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold">
+          Salin Skrip SQL Supabase
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden max-w-sm bg-aware-950 text-white px-4 py-3 rounded-2xl shadow-2xl border border-coral-300/40 text-xs flex items-center gap-2.5">
+    <span class="w-2.5 h-2.5 rounded-full bg-coral-300 shrink-0"></span>
+    <span id="toast-text">Berhasil!</span>
+  </div>
+
+  <script>
+    const state = {
+      user: { name: 'Fatih', planTier: 'free', referralCode: 'FATIH05' },
+      selectedSpaceId: 1,
+      selectedMood: 4,
+      activeCheckoutProduct: null,
+      appliedReferral: null,
+      referralStatsCount: 18,
+      financials: { gross: 1485000, discountTotal: 24500, net: 1450105 },
+      spaces: [
+        {
+          id: 1,
+          code: '01. SELF SPACE',
+          name: '01. SELF SPACE',
+          sub: 'Self-Awareness & Emotional Well-being',
+          leadRole: 'SELF SPACE LEAD',
+          desc: 'Ruang untuk mengenali diri, memahami emosi, melakukan refleksi, dan membangun hubungan yang lebih sehat dengan diri sendiri.',
+          goalText: 'Membantu pengguna lebih memahami dirinya, mengenali emosi, dan membangun kebiasaan refleksi diri.',
+          prompt: '"Emosi apa yang paling sering hadir minggu ini, dan apa kebutuhan dirimu di balik emosi tersebut?"',
+          badgeColor: 'bg-aware-100 text-aware-800 border-aware-200',
+          priorityMvp: ['Daily Journal', 'Mood Tracker', 'Self-Discovery Workbook'],
+          allToolkits: ['Daily Journal', 'Mood Tracker', 'Self-Discovery Workbook', 'Emotional Awareness Workbook', 'Self-Care Planner', 'Gratitude Journal', 'Reflection Cards'],
+          allClasses: ['Understanding Yourself', 'Emotional Awareness', 'Journaling for Self-Growth', 'Healthy Digital Habits', 'Self-Compassion'],
+          allSessions: ['Self-Discovery Session', 'Journaling Guidance', 'Personal Reflection Session'],
+          webFeatures: ['Daily journaling', 'Daily mood check-in', 'Mood history', 'Grafik perubahan suasana hati', 'Journal library', 'Journaling prompts', 'Weekly reflection']
+        },
+        {
+          id: 2,
+          code: '02. PURPOSE',
+          name: '02. PURPOSE',
+          sub: 'Purpose & Goal Setting',
+          leadRole: 'PURPOSE LEAD',
+          desc: 'Ruang untuk membantu anak muda menemukan arah, menentukan tujuan, dan menyusun langkah-langkah yang ingin dicapai.',
+          goalText: 'Membantu pengguna memiliki arah yang lebih jelas dan mengubah tujuan menjadi langkah-langkah yang realistis.',
+          prompt: '"Satu tujuan bermakna apa yang ingin kamu wujudkan 90 hari ke depan, dan apa langkah terkecilnya hari ini?"',
+          badgeColor: 'bg-teal-100 text-teal-600 border-teal-100',
+          priorityMvp: ['Vision Board', 'Goal Setting Workbook', 'Habit Tracker'],
+          allToolkits: ['Purpose of Life Workbook', 'Vision Board Template', 'Life Planner', 'Goal Setting Workbook', 'Habit Tracker', 'Monthly Reset Planner', 'Dream Mapping Template'],
+          allClasses: ['Finding Your Purpose', 'How to Set Meaningful Goals', 'Building Better Habits', 'Vision Board Workshop', 'Time Management for Young People', 'From Dream to Action'],
+          allSessions: ['Personal Goal-Setting Session', 'Life Planning Session', 'Habit-Building Session'],
+          webFeatures: ['Personal goal dashboard', 'Goal progress tracker', 'Habit tracker', 'Monthly reflection', 'Digital vision board', 'Reminder target pribadi']
+        },
+        {
+          id: 3,
+          code: '03. BRAIN BOOST',
+          name: '03. BRAIN BOOST',
+          sub: 'Academic Development & Learning Skills',
+          leadRole: 'BRAIN BOOST LEAD',
+          desc: 'Ruang belajar dan pengembangan kemampuan akademik yang membantu anak muda belajar lebih efektif, terarah, dan menyenangkan.',
+          goalText: 'Membantu pengguna meningkatkan kemampuan belajar dan mendapatkan akses terhadap sumber belajar yang praktis serta terjangkau.',
+          prompt: '"Topik akademik apa yang sedang kamu pelajari, dan metode belajar apa yang paling membantumu fokus?"',
+          badgeColor: 'bg-aware-100 text-aware-700 border-aware-200',
+          priorityMvp: ['Study Planner', 'Learning Tracker', 'Study Notes'],
+          allToolkits: ['Study Planner', 'Exam Preparation Planner', 'Learning Tracker', 'Psychology E-book', 'Study Notes', 'Flashcard Template', 'Research Planner', 'Note-taking Template'],
+          allClasses: ['Effective Learning Strategies', 'How to Study Smarter', 'Critical Thinking Skills', 'Academic Writing Basics', 'Research Skills for Students', 'Study Productivity'],
+          allSessions: ['Study Planning Session', 'Academic Productivity Session', 'Learning Strategy Session'],
+          webFeatures: ['Digital study planner', 'Learning progress tracker', 'Materi dan e-book library', 'Kategori materi berdasarkan topik', 'Informasi kelas dan webinar', 'Riwayat produk yang dibeli']
+        },
+        {
+          id: 4,
+          code: '04. FUTURE READY',
+          name: '04. FUTURE READY',
+          sub: 'Career & Personal Growth',
+          leadRole: 'FUTURE READY LEAD',
+          desc: 'Ruang untuk mempersiapkan anak muda menghadapi dunia perkuliahan, beasiswa, organisasi, magang, hingga dunia kerja.',
+          goalText: 'Membantu pengguna meningkatkan kesiapan akademik dan profesional untuk menghadapi peluang di masa depan.',
+          prompt: '"Pengalaman atau pencapaian apa yang paling merepresentasikan potensimu untuk ditulis di CV atau esai beasiswa?"',
+          badgeColor: 'bg-amber-100 text-amber-600 border-amber-100',
+          priorityMvp: ['CV Template', 'Scholarship Guidebook', 'Interview Preparation Kit'],
+          allToolkits: ['CV Template', 'Portfolio Template', 'Scholarship Guidebook', 'Essay Workbook', 'Motivation Letter Guide', 'Interview Preparation Kit', 'Personal Branding Workbook', 'Career Planning Workbook'],
+          allClasses: ['Building Your First CV', 'Scholarship Preparation', 'Personal Branding 101', 'Interview Skills', 'Career Exploration', 'From Campus to Career', 'Building a Professional Portfolio'],
+          allSessions: ['CV Review Session', 'Scholarship Essay Review', 'Career Exploration Session', 'Interview Practice Session', 'Personal Branding Session'],
+          webFeatures: ['CV and portfolio library', 'Scholarship information', 'Career development resources', 'Mentoring registration', 'Event and opportunity board', 'Career preparation checklist']
+        },
+        {
+          id: 5,
+          code: '05. CREATE',
+          name: '05. CREATE',
+          sub: 'Creativity & Communication',
+          leadRole: 'CREATE LEAD',
+          desc: 'Ruang untuk mengeksplorasi kreativitas, meningkatkan keterampilan komunikasi, dan mengekspresikan potensi melalui karya.',
+          goalText: 'Membantu anak muda mengembangkan kreativitas, kemampuan komunikasi, dan keberanian untuk menghasilkan karya.',
+          prompt: '"Gagasan atau cerita apa yang ingin kamu bagikan lewat karya atau presentasi minggu ini?"',
+          badgeColor: 'bg-coral-100 text-coral-600 border-coral-100',
+          priorityMvp: ['Canva Template', 'Presentation Template', 'Content Planner'],
+          allToolkits: ['Canva Template', 'Presentation Template', 'Social Media Kit', 'Content Planner', 'Creative Journal', 'Public Speaking Workbook', 'Storytelling Guide', 'Communication Workbook'],
+          allClasses: ['Canva for Beginners', 'Creative Content Making', 'Public Speaking Basics', 'Storytelling for Impact', 'Effective Communication', 'Presentation Skills', 'Visual Storytelling'],
+          allSessions: ['Presentation Practice', 'Public Speaking Practice', 'Creative Project Consultation', 'Content Planning Session'],
+          webFeatures: ['Creative template library', 'Design resources', 'Content idea bank', 'Kelas keterampilan kreatif', 'Community showcase', 'Ruang berbagi karya pengguna']
+        }
+      ],
+      products: [
+        // 01. SELF SPACE (3 MVP Launch Toolkits + Class + Session)
+        { id: 'p1_tk', spaceId: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #1', title: 'Self-Discovery Workbook & Reflection Cards', price: 10000, soldVerified: 68, webinarTitle: 'SELF-DISCOVERY WEBINAR: Understanding Yourself & Emotional Well-being', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Panduan mengenali nilai diri, peta kesadaran emosi, dan lembar kerja refleksi mandiri.', owned: true },
+        { id: 'p1_tk2', spaceId: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #2', title: 'Daily Journal & Gratitude Journal Pack', price: 6000, soldVerified: 74, webinarTitle: 'Journaling for Self-Growth Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Template jurnal harian terstruktur, 30 prompt refleksi diri, dan lembar syukur harian.', owned: false },
+        { id: 'p1_tk3', spaceId: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #3', title: 'Mood Tracker & Self-Care Planner', price: 5000, soldVerified: 82, webinarTitle: 'Healthy Digital Habits & Self-Compassion Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Pelacak suasana hati bulanan (non-diagnostik) dan perencana rutinitas self-care mahasiswa.', owned: true },
+        { id: 'p1_cl', spaceId: 1, isMvp: false, type: 'class', typeLabel: 'Growth Class', title: 'Emotional Awareness & Healthy Digital Habits Class', price: 25000, soldVerified: 45, webinarTitle: 'Sesi Kelas Ruang SELF SPACE', webinarSchedule: 'Sabtu, 28 Nov 2026 • 19.30 WIB', previewText: 'Kelas interaktif memahami sinyal emosi dan membangun kebiasaan digital yang sehat.', owned: false },
+        { id: 'p1_ss', spaceId: 1, isMvp: false, type: 'session', typeLabel: 'Growth Session (1-on-1)', title: '1-on-1 Self-Discovery & Journaling Guidance Session', price: 100000, soldVerified: 14, webinarTitle: 'Mentoring Personal SELF SPACE', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Pendampingan 1-on-1 bersama Self Space Lead untuk eksplorasi diri dan kebiasaan refleksi.', owned: false },
+
+        // 02. PURPOSE (3 MVP Launch Toolkits + Session)
+        { id: 'p2_tk', spaceId: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #4', title: 'Digital Vision Board & Dream Mapping Template', price: 8000, soldVerified: 79, webinarTitle: 'VISION BOARD & PURPOSE WEBINAR: From Dream to Action', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Kanvas visual penyusun impian 1–3 tahun ke depan dan peta langkah aksi konkret.', owned: false },
+        { id: 'p2_tk2', spaceId: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #5', title: 'Goal Setting Workbook & Purpose of Life Guide', price: 10000, soldVerified: 64, webinarTitle: 'How to Set Meaningful Goals Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Workbook penyusunan target SMART yang bermakna tanpa merasa kewalahan.', owned: false },
+        { id: 'p2_tk3', spaceId: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #6', title: 'Habit Tracker & Monthly Reset Planner', price: 6000, soldVerified: 91, webinarTitle: 'Building Better Habits Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Pelacak pembentukan kebiasaan 30 hari dan evaluasi reset bulanan.', owned: false },
+        { id: 'p2_ss', spaceId: 2, isMvp: false, type: 'session', typeLabel: 'Growth Session (1-on-1)', title: '1-on-1 Personal Goal-Setting & Life Planning Session', price: 100000, soldVerified: 11, webinarTitle: 'Mentoring Personal PURPOSE', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Sesi 1-on-1 bersama Purpose Lead untuk menyusun peta tujuan dan langkah realistis.', owned: false },
+
+        // 03. BRAIN BOOST (3 MVP Launch Toolkits + Class)
+        { id: 'p3_tk', spaceId: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #7', title: 'Study Planner & Exam Preparation Planner', price: 7500, soldVerified: 88, webinarTitle: 'BRAIN BOOST WEBINAR: How to Study Smarter', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Perencana jadwal belajar semester, persiapan ujian, dan pembagian fokus harian.', owned: false },
+        { id: 'p3_tk2', spaceId: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #8', title: 'Learning Tracker & Research Planner', price: 7500, soldVerified: 72, webinarTitle: 'Research Skills & Critical Thinking Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Tracker progres pemahaman mata kuliah, bacaan jurnal, dan rencana riset mahasiswa.', owned: false },
+        { id: 'p3_tk3', spaceId: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #9', title: 'Study Notes, Psychology E-book & Flashcard Template', price: 10000, soldVerified: 95, webinarTitle: 'Academic Writing Basics Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Rangkuman materi psikologi populer, sistem pencatatan Cornell, dan kartu belajar aktif.', owned: false },
+        { id: 'p3_cl', spaceId: 3, isMvp: false, type: 'class', typeLabel: 'Growth Class', title: 'Effective Learning Strategies & Study Productivity Class', price: 20000, soldVerified: 52, webinarTitle: 'Kelas Bersama BRAIN BOOST', webinarSchedule: 'Minggu, 29 Nov 2026 • 16.00 WIB', previewText: 'Sesi belajar kelompok membahas teknik belajar efektif, berpikir kritis, dan manajemen fokus.', owned: false },
+
+        // 04. FUTURE READY (3 MVP Launch Toolkits + Session)
+        { id: 'p4_tk', spaceId: 4, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #10', title: 'CV Template & Professional Portfolio Template', price: 8000, soldVerified: 100, webinarTitle: 'FUTURE READY WEBINAR: From Campus to Career', webinarSchedule: 'TERBUKA (100/100)! Jumat, 27 Nov 2026 • 19.30 WIB', previewText: 'Template CV ATS-friendly dan kerangka penyusunan portofolio organisasi, magang, & karier.', owned: false },
+        { id: 'p4_tk2', spaceId: 4, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #11', title: 'Scholarship Guidebook, Essay & Motivation Letter Guide', price: 10000, soldVerified: 89, webinarTitle: 'Scholarship Preparation Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Future Ready Aktif', previewText: 'Panduan lengkap persiapan beasiswa, struktur esai pemenang, dan kerangka motivation letter.', owned: false },
+        { id: 'p4_tk3', spaceId: 4, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #12', title: 'Interview Preparation Kit & Personal Branding Workbook', price: 9000, soldVerified: 77, webinarTitle: 'Interview Skills & Personal Branding 101', webinarSchedule: 'Target 100 Pembeli • Grup WA Future Ready Aktif', previewText: 'Panduan menjawab wawancara metode STAR dan buku kerja personal branding mahasiswa.', owned: false },
+        { id: 'p4_ss', spaceId: 4, isMvp: false, type: 'session', typeLabel: 'Growth Session (1-on-1)', title: '1-on-1 CV Review, Scholarship Essay & Interview Practice', price: 100000, soldVerified: 19, webinarTitle: 'Mentoring Personal FUTURE READY', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Bedah langsung CV, esai beasiswa, dan simulasi wawancara bersama Future Ready Lead.', owned: false },
+
+        // 05. CREATE (3 MVP Launch Toolkits + Class)
+        { id: 'p5_tk', spaceId: 5, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #13', title: 'Canva Template & Social Media Creative Kit', price: 5000, soldVerified: 84, webinarTitle: 'CREATE WEBINAR: Creative Content Making', webinarSchedule: 'Target 100 Pembeli • Grup WA Create Aktif', previewText: 'Koleksi template desain edukatif Canva siap pakai untuk kampanye dan kreasi konten.', owned: false },
+        { id: 'p5_tk2', spaceId: 5, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #14', title: 'Presentation Template & Visual Storytelling Guide', price: 7500, soldVerified: 69, webinarTitle: 'Storytelling for Impact Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Create Aktif', previewText: 'Template slide presentasi akademik/kompetisi dan panduan bercerita secara visual.', owned: false },
+        { id: 'p5_tk3', spaceId: 5, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit • MVP #15', title: 'Content Planner & Public Speaking Workbook', price: 8000, soldVerified: 71, webinarTitle: 'Public Speaking Basics Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Create Aktif', previewText: 'Perencana kalender ide konten kreatif serta latihan keberanian berbicara di depan umum.', owned: false },
+
+        // PREMIUM MEMBERSHIP PASS
+        { id: 'pro_pass', spaceId: 1, isMvp: false, type: 'toolkit', typeLabel: 'Premium Membership', title: 'AwareMind Premium Membership (Buka Seluruh Fitur Growth Dashboard)', price: 15000, soldVerified: 94, webinarTitle: 'Exclusive Member Growth Circle', webinarSchedule: 'Sabtu, 5 Des 2026 • 19.30 WIB', previewText: 'Membuka Journaling lengkap, koleksi prompt 5 ruang, laporan pola mood, Habit Tracker lanjutan, Goal Dashboard, dan workbook eksklusif.', owned: false }
+      ],
+      journals: [
+        { date: '13 Nov 2026', mood: 4, space: '01. SELF SPACE', text: 'Mulai mengenali ritme belajar yang nyaman tanpa membandingkan diri dengan orang lain.' },
+        { date: '11 Nov 2026', mood: 3, space: '02. PURPOSE', text: 'Menyusun 3 prioritas utama bulan November agar langkah harian lebih terarah.' },
+        { date: '09 Nov 2026', mood: 5, space: '03. BRAIN BOOST', text: 'Selesai merangkum 2 artikel jurnal psikologi tepat waktu dengan teknik fokus 25 menit.' }
+      ],
+      visionGoals: [
+        { id: 'g1', space: '02. PURPOSE', title: 'Menyusun Peta Karier & Studi Lanjut 2027', progress: 75 },
+        { id: 'g2', space: '03. BRAIN BOOST', title: 'Menuntaskan Proposal & Riset Semester Ini', progress: 85 },
+        { id: 'g3', space: '04. FUTURE READY', title: 'Merapikan Portofolio & Esai Beasiswa', progress: 60 },
+        { id: 'g4', space: '05. CREATE', title: 'Menerbitkan 4 Konten Edukasi Psikologi Bulan Ini', progress: 50 }
+      ],
+      habits: [
+        { id: 'h1', label: 'Daily Journaling & Mood Check-in (01. SELF SPACE)', done: true },
+        { id: 'h2', label: 'Review Target Mingguan & Vision Board (02. PURPOSE)', done: true },
+        { id: 'h3', label: 'Belajar Terfokus 45 Menit Tanpa Distraksi (03. BRAIN BOOST)', done: false },
+        { id: 'h4', label: 'Update 1 Bagian CV / Portofolio (04. FUTURE READY)', done: false },
+        { id: 'h5', label: 'Tulis 1 Ide Karya di Content Bank (05. CREATE)', done: false }
+      ],
+      ecosystemPrograms: [
+        { id: 'eco_heal', name: '1. Heal Mind', tag: 'Peer Support Service', color: 'bg-coral-50 border-coral-200 text-coral-600', desc: 'Informasi dan pendaftaran layanan pendampingan sebaya (peer support) yang aman dan empatik bagi anak muda.', actionLabel: 'Daftar Sesi Peer Support' },
+        { id: 'eco_class', name: '2. Aware Class', tag: 'Self-Growth Classes', color: 'bg-aware-50 border-aware-200 text-aware-800', desc: 'Informasi kelas tematik dan kegiatan belajar bersama seputar psikologi praktis serta pengembangan diri.', actionLabel: 'Lihat Jadwal Aware Class' },
+        { id: 'eco_talks', name: '3. InspireMind Talks', tag: 'Webinar & Talkshow', color: 'bg-teal-50 border-teal-100 text-teal-600', desc: 'Forum webinar, talkshow interaktif, dan ruang diskusi terbuka bersama narasumber inspiratif.', actionLabel: 'Ikuti InspireMind Talks' },
+        { id: 'eco_ama', name: '4. AwareMind Ambassador', tag: 'Youth Leadership Cohort', color: 'bg-aware-50 border-aware-200 text-aware-800', desc: 'Informasi rekrutmen resmi duta pemuda AwareMind Ambassador lintas provinsi di Indonesia.', actionLabel: 'Info Seleksi Ambassador' },
+        { id: 'eco_vol', name: '5. Volunteer Opportunities', tag: 'Social Contribution', color: 'bg-amber-50 border-amber-100 text-amber-600', desc: 'Kesempatan berkontribusi sebagai relawan dalam kampanye edukasi dan gerakan sosial AwareMind.', actionLabel: 'Daftar Volunteer' },
+        { id: 'eco_proj', name: '6. Creative Projects', tag: 'Collaborative Works', color: 'bg-coral-50 border-coral-200 text-coral-600', desc: 'Ruang kolaborasi lintas bidang untuk menerbitkan e-book antologi, kampanye kreatif, dan proyek komunitas.', actionLabel: 'Gabung Proyek Kolaborasi' }
+      ],
+      validFriendCodes: ['SOFI05', 'NADIA05', 'RAKA05', 'ALDO05', 'HANI05', 'HIKMA05']
+    };
+
+    function formatRp(num) { return 'Rp ' + (Number(num) || 0).toLocaleString('id-ID'); }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const box = document.getElementById('toast');
+      const txt = document.getElementById('toast-text');
+      if (!box || !txt) return;
+      txt.textContent = msg;
+      box.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => box.classList.add('hidden'), 3800);
+    }
+
+    function switchMainTab(targetId) {
+      ['view-home', 'view-catalog', 'view-journal', 'view-community', 'view-library', 'view-ecosystem'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('hidden', id !== targetId);
+      });
+      document.querySelectorAll('.main-nav-btn').forEach(btn => {
+        const active = btn.getAttribute('data-target') === targetId;
+        if (btn.closest('aside')) {
+          btn.classList.toggle('sidebar-pill-active', active);
+          btn.classList.toggle('text-slate-600', !active);
+        } else {
+          btn.classList.toggle('tab-underline', active);
+          btn.classList.toggle('text-slate-600', !active);
+        }
+      });
+      if (targetId === 'view-journal') renderGrowthJourneyChart();
+    }
+
+    function renderHeaderAndTier() {
+      const isPro = state.user.planTier === 'pro';
+      document.getElementById('header-user-name').textContent = state.user.name;
+      document.getElementById('top-my-ref').textContent = state.user.referralCode;
+      document.getElementById('referral-card-code').textContent = state.user.referralCode;
+
+      const planBadge = document.getElementById('header-plan-badge');
+      const switchBtn = document.getElementById('btn-switch-tier-demo');
+      const journalTierText = document.getElementById('journal-tier-text');
+      const proContent = document.getElementById('pro-journey-content');
+      const paywallOverlay = document.getElementById('pro-paywall-overlay');
+      const lockTag = document.getElementById('journey-lock-tag');
+      const promptBtn = document.getElementById('btn-use-pro-prompt');
+
+      if (isPro) {
+        planBadge.textContent = 'PREMIUM MEMBER';
+        planBadge.className = 'text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-600 border border-teal-500/30 font-bold';
+        switchBtn.textContent = 'Status Akun: PREMIUM MEMBER (Klik ke Free)';
+        journalTierText.textContent = 'PREMIUM MEMBERSHIP (Seluruh Fitur Growth Dashboard, Vision Board & Prompt 5 Ruang Terbuka)';
+        proContent.classList.remove('locked-blur');
+        paywallOverlay.classList.add('hidden');
+        lockTag.textContent = 'TERBUKA PENUH (PREMIUM MEMBER)';
+        lockTag.className = 'text-[10px] font-mono uppercase text-teal-600 font-bold';
+        promptBtn.textContent = '✦ Ganti Prompt 5 Ruang';
+      } else {
+        planBadge.textContent = 'FREE ACCOUNT';
+        planBadge.className = 'text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-aware-100 text-aware-800 border border-aware-200 font-semibold';
+        switchBtn.textContent = 'Status Akun: FREE ACCOUNT (Klik ke Premium)';
+        journalTierText.textContent = 'FREE ACCOUNT (Daily Journaling, Mood Check-in & Grafik Sederhana Terbuka)';
+        proContent.classList.add('locked-blur');
+        paywallOverlay.classList.remove('hidden');
+        lockTag.textContent = 'FITUR PREMIUM MEMBERSHIP';
+        lockTag.className = 'text-[10px] font-mono uppercase text-aware-700 font-bold';
+        promptBtn.textContent = '🔒 Prompt Premium';
+      }
+
+      const selfProd = state.products.find(p => p.id === 'p1_tk');
+      if (selfProd) {
+        const count = Math.min(100, selfProd.soldVerified);
+        const sbCount = document.getElementById('sidebar-100-count');
+        const sbBar = document.getElementById('sidebar-100-bar');
+        const sbCap = document.getElementById('sidebar-100-caption');
+        const stat100 = document.getElementById('stat-card-100');
+        if (sbCount) sbCount.textContent = String(count);
+        if (stat100) stat100.textContent = String(count);
+        if (sbBar) sbBar.style.width = `${count}%`;
+        if (sbCap) {
+          sbCap.textContent = count >= 100
+            ? 'Target 100/100 pembeli tercapai! Webinar Gratis Self-Discovery resmi dibuka!'
+            : `${100 - count} pembelian lagi menuju webinar gratis untuk seluruh anggota komunitas!`;
+        }
+      }
+
+      document.getElementById('badge-library-count').textContent = String(state.products.filter(p => p.owned).length);
+      document.getElementById('referral-total-count').textContent = `${state.referralStatsCount} Transaksi Sah`;
+      document.getElementById('fin-gross').textContent = formatRp(state.financials.gross);
+      document.getElementById('fin-discount').textContent = '-' + formatRp(state.financials.discountTotal);
+      document.getElementById('fin-net').textContent = formatRp(state.financials.net);
+    }
+
+    function renderHomeSpaces() {
+      const grid = document.getElementById('home-spaces-grid');
+      const detail = document.getElementById('home-space-detail');
+      if (!grid || !detail) return;
+
+      grid.innerHTML = '';
+      state.spaces.forEach(sp => {
+        const active = sp.id === state.selectedSpaceId;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `space-node p-4 rounded-2xl border text-left ${
+          active
+            ? 'bg-aware-800 border-aware-800 text-white shadow-md'
+            : 'bg-white border-aware-200 hover:border-aware-600 text-aware-950'
+        }`;
+        btn.innerHTML = `
+          <div class="text-[10px] font-mono uppercase ${active ? 'text-coral-300' : 'text-aware-700'} font-bold">${sp.leadRole}</div>
+          <div class="font-extrabold text-sm mt-1">${sp.name}</div>
+          <div class="text-[11px] mt-0.5 ${active ? 'text-purple-100' : 'text-slate-500'}">${sp.sub}</div>
+        `;
+        btn.addEventListener('click', () => {
+          state.selectedSpaceId = sp.id;
+          renderHomeSpaces();
+        });
+        grid.appendChild(btn);
+      });
+
+      const sp = state.spaces.find(s => s.id === state.selectedSpaceId) || state.spaces[0];
+      const spProducts = state.products.filter(p => p.spaceId === sp.id && p.id !== 'pro_pass');
+
+      detail.innerHTML = `
+        <div class="flex flex-wrap items-start justify-between gap-3 border-b border-aware-100 pb-4">
+          <div class="space-y-1 max-w-2xl">
+            <span class="text-[10px] font-mono uppercase px-3 py-0.5 rounded-full border font-bold ${sp.badgeColor}">${sp.sub} • Dikawal oleh ${sp.leadRole}</span>
+            <h4 class="font-display text-2xl text-aware-950 pt-1">${sp.name}</h4>
+            <p class="text-xs text-slate-600">${sp.desc}</p>
+            <p class="text-[11px] text-aware-800 font-medium"><strong>Tujuan Ruang:</strong> ${sp.goalText}</p>
+          </div>
+          <button type="button" id="btn-jump-space-catalog" class="btn-whimsy px-4 py-2.5 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold shadow-sm">
+            Belanja Produk ${sp.name} →
+          </button>
+        </div>
+
+        <!-- 4 Columns: Priority Launch, Classes, Mentoring & Website Features -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3 text-xs">
+          <div class="p-3.5 rounded-2xl bg-aware-50 border border-aware-200 space-y-1.5">
+            <div class="font-mono text-[10px] uppercase font-bold text-aware-800">★ 3 Prioritas Peluncuran + Toolkit</div>
+            <ul class="space-y-1 text-[11px] text-slate-700">
+              ${sp.allToolkits.map((item, i) => `<li class="flex items-center gap-1.5"><span class="text-aware-700 font-bold">${i < 3 ? '★' : '•'}</span><span class="${i < 3 ? 'font-bold text-aware-950' : ''}">${item}</span></li>`).join('')}
+            </ul>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-teal-50/70 border border-teal-100 space-y-1.5">
+            <div class="font-mono text-[10px] uppercase font-bold text-teal-600">Growth Class (Kelas Bersama)</div>
+            <ul class="space-y-1 text-[11px] text-slate-700">
+              ${sp.allClasses.map(item => `<li class="flex items-center gap-1.5"><span class="text-teal-600 font-bold">•</span><span>${item}</span></li>`).join('')}
+            </ul>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-coral-50/70 border border-coral-100 space-y-1.5">
+            <div class="font-mono text-[10px] uppercase font-bold text-coral-600">Growth Session (1-on-1 Opsional)</div>
+            <ul class="space-y-1 text-[11px] text-slate-700">
+              ${sp.allSessions.map(item => `<li class="flex items-center gap-1.5"><span class="text-coral-600 font-bold">•</span><span>${item}</span></li>`).join('')}
+            </ul>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-100 space-y-1.5">
+            <div class="font-mono text-[10px] uppercase font-bold text-amber-600">Fitur Website di Ruang Ini</div>
+            <ul class="space-y-1 text-[11px] text-slate-700">
+              ${sp.webFeatures.map(item => `<li class="flex items-center gap-1.5"><span class="text-amber-600 font-bold">✓</span><span>${item}</span></li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <!-- Ready-to-Buy Cards for This Space -->
+        <div class="space-y-2 pt-1">
+          <div class="text-xs font-bold text-aware-950">Katalog Produk &amp; Layanan Aktif di ${sp.name}:</div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            ${spProducts.slice(0, 3).map(p => `
+              <div class="p-4 rounded-2xl bg-canvas border border-aware-200 flex flex-col justify-between space-y-2.5">
+                <div>
+                  <div class="flex items-center justify-between text-[10px] font-mono">
+                    <span class="font-bold text-aware-700 uppercase">${p.typeLabel}</span>
+                    <span class="font-extrabold text-aware-950">${formatRp(p.price)}</span>
+                  </div>
+                  <div class="font-bold text-xs text-aware-950 mt-1">${p.title}</div>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-aware-200/70">
+                  <span class="text-[10px] font-mono text-teal-600 font-semibold">Target Webinar: ${p.soldVerified}/100</span>
+                  <button type="button" class="home-buy-btn text-xs font-bold text-aware-800 hover:underline" data-id="${p.id}">
+                    ${p.owned ? '✓ Di Library' : 'Preview / Beli →'}
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('btn-jump-space-catalog')?.addEventListener('click', () => {
+        document.getElementById('filter-space').value = String(sp.id);
+        renderCatalog();
+        switchMainTab('view-catalog');
+      });
+
+      detail.querySelectorAll('.home-buy-btn').forEach(b => {
+        b.addEventListener('click', () => openPreviewModal(b.getAttribute('data-id')));
+      });
+    }
+
+    let journeyChart = null;
+    function renderJournalHistory() {
+      const container = document.getElementById('journal-history-container');
+      if (container) {
+        container.innerHTML = state.journals.map(j => `
+          <div class="p-3 rounded-2xl bg-canvas border border-aware-200 flex items-start justify-between gap-2">
+            <div>
+              <div class="font-bold text-aware-950">${j.date} • <span class="text-aware-700">${j.space}</span></div>
+              <p class="text-slate-600 mt-0.5">${j.text}</p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-aware-100 text-aware-800 font-mono text-[10px] font-bold shrink-0">Mood ${j.mood}/5</span>
+          </div>
+        `).join('');
+      }
+
+      const goalsBox = document.getElementById('vision-goals-list');
+      if (goalsBox) {
+        goalsBox.innerHTML = state.visionGoals.map(g => `
+          <div class="p-3 rounded-xl bg-canvas border border-aware-200 space-y-1.5">
+            <div class="flex items-center justify-between text-[10px] font-mono">
+              <span class="text-aware-700 font-bold">${g.space}</span>
+              <span class="font-bold text-teal-600">${g.progress}%</span>
+            </div>
+            <div class="font-bold text-aware-950 text-[11px]">${g.title}</div>
+            <div class="w-full h-1.5 bg-aware-100 rounded-full overflow-hidden">
+              <div class="h-full bg-aware-700 rounded-full" style="width: ${g.progress}%"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const habitsBox = document.getElementById('pro-habits-list');
+      if (habitsBox) {
+        habitsBox.innerHTML = '';
+        state.habits.forEach(h => {
+          const lbl = document.createElement('label');
+          lbl.className = 'flex items-center gap-2 p-2.5 rounded-xl bg-canvas border border-aware-200 cursor-pointer';
+          lbl.innerHTML = `
+            <input type="checkbox" ${h.done ? 'checked' : ''} class="accent-aware-800" />
+            <span class="${h.done ? 'line-through text-slate-400' : 'text-aware-950 font-medium'}">${h.label}</span>
+          `;
+          lbl.querySelector('input').addEventListener('change', (e) => {
+            h.done = e.target.checked;
+            renderJournalHistory();
+          });
+          habitsBox.appendChild(lbl);
+        });
+      }
+    }
+
+    function renderGrowthJourneyChart() {
+      const canvas = document.getElementById('growthJourneyChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+      const labels = state.journals.slice().reverse().map(j => j.date);
+      const data = state.journals.slice().reverse().map(j => j.mood);
+      if (journeyChart) {
+        journeyChart.data.labels = labels;
+        journeyChart.data.datasets[0].data = data;
+        journeyChart.update();
+        return;
+      }
+      journeyChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Refleksi Suasana Hati (1-5)',
+            data,
+            borderColor: '#5F3F90',
+            backgroundColor: 'rgba(95, 63, 144, 0.14)',
+            pointBackgroundColor: '#E56B6F',
+            fill: true,
+            tension: 0.38
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { min: 1, max: 5, ticks: { stepSize: 1 } } }
+        }
+      });
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-products-grid');
+      if (!grid) return;
+      const spFilter = document.getElementById('filter-space')?.value || 'ALL';
+      const typeFilter = document.getElementById('filter-type')?.value || 'ALL';
+
+      const list = state.products.filter(p => {
+        const matchSpace = spFilter === 'ALL' || String(p.spaceId) === spFilter;
+        const matchType = typeFilter === 'ALL'
+          || (typeFilter === 'mvp' && p.isMvp)
+          || p.type === typeFilter;
+        return matchSpace && matchType;
+      });
+
+      grid.innerHTML = '';
+      list.forEach(p => {
+        const sp = state.spaces.find(s => s.id === p.spaceId);
+        const pct = Math.min(100, p.soldVerified);
+        const isUnlockedWebinar = p.soldVerified >= 100;
+
+        const card = document.createElement('div');
+        card.className = 'p-5 rounded-2xl border border-aware-200 bg-canvas/70 flex flex-col justify-between space-y-4 hover:border-aware-700 transition-all';
+        card.innerHTML = `
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-aware-100 text-aware-800 border border-aware-200">${p.typeLabel}</span>
+              <span class="text-[10px] font-mono font-semibold text-slate-500">${sp ? sp.name : ''}</span>
+            </div>
+            <h3 class="font-bold text-base text-aware-950 leading-snug">${p.title}</h3>
+            <p class="text-xs text-slate-600 line-clamp-2">${p.previewText}</p>
+            <div class="p-3 rounded-xl bg-white border border-aware-200 space-y-1.5">
+              <div class="flex justify-between text-[10px] font-mono">
+                <span class="${isUnlockedWebinar ? 'text-teal-600 font-bold' : 'text-aware-800 font-semibold'}">
+                  ${isUnlockedWebinar ? '✓ WEBINAR GRATIS TERBUKA!' : `${p.soldVerified}/100 pembeli`}
+                </span>
+                <span class="text-slate-500">${isUnlockedWebinar ? '100/100' : `${100 - p.soldVerified} lagi`}</span>
+              </div>
+              <div class="w-full h-1.5 bg-aware-100 rounded-full overflow-hidden">
+                <div class="h-full ${isUnlockedWebinar ? 'bg-teal-500' : 'bg-aware-700'}" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-aware-200/70 flex items-center justify-between gap-2">
+            <div>
+              <div class="text-[10px] text-slate-400">Harga</div>
+              <div class="font-mono font-extrabold text-sm text-aware-950">${formatRp(p.price)}</div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" class="btn-preview px-3 py-1.5 rounded-full border border-aware-200 bg-white text-aware-900 hover:bg-aware-50 text-xs font-bold" data-id="${p.id}">
+                Preview
+              </button>
+              <button type="button" class="btn-buy px-4 py-1.5 rounded-full ${
+                p.owned ? 'bg-teal-600 text-white' : 'bg-aware-800 hover:bg-aware-700 text-white'
+              } text-xs font-bold" data-id="${p.id}">
+                ${p.owned ? '✓ Di Library' : 'Beli'}
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      grid.querySelectorAll('.btn-preview').forEach(btn => {
+        btn.addEventListener('click', () => openPreviewModal(btn.getAttribute('data-id')));
+      });
+      grid.querySelectorAll('.btn-buy').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const pid = btn.getAttribute('data-id');
+          const prod = state.products.find(x => x.id === pid);
+          if (prod && prod.owned) {
+            switchMainTab('view-library');
+            showToast('Produk ini sudah ada di Growth Library kamu!');
+          } else {
+            openCheckoutModal(pid);
+          }
+        });
+      });
+    }
+
+    function renderGrowthTogether() {
+      const container = document.getElementById('growth-together-list');
+      if (!container) return;
+      const featuredItems = state.products.filter(p => p.isMvp).slice(0, 6);
+
+      container.innerHTML = featuredItems.map(p => {
+        const unlocked = p.soldVerified >= 100;
+        const pct = Math.min(100, p.soldVerified);
+        const remaining = Math.max(0, 100 - p.soldVerified);
+        return `
+          <div class="p-4 rounded-2xl border ${unlocked ? 'border-teal-500/40 bg-teal-50/60' : 'border-aware-200 bg-canvas'} space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <div class="font-bold text-xs text-aware-950">${p.webinarTitle}</div>
+                <div class="text-[11px] text-slate-500">Produk: ${p.title}</div>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                unlocked ? 'bg-teal-600 text-white' : 'bg-aware-100 text-aware-800'
+              }">
+                ${unlocked ? 'TERCAPAI (100/100)' : `${p.soldVerified}/100 pembeli`}
+              </span>
+            </div>
+            <div class="w-full h-2.5 bg-aware-100 rounded-full overflow-hidden">
+              <div class="h-full ${unlocked ? 'bg-teal-500' : 'bg-aware-700'} transition-all" style="width: ${pct}%"></div>
+            </div>
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-aware-800 font-semibold">${unlocked ? 'Webinar Gratis Resmi Terbuka!' : `${remaining} pembelian lagi menuju webinar gratis!`}</span>
+              <span class="text-slate-500">${p.webinarSchedule}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLibrary() {
+      const container = document.getElementById('library-items-container');
+      if (!container) return;
+      const owned = state.products.filter(p => p.owned);
+      container.innerHTML = owned.map(p => {
+        const unlockedWebinar = p.soldVerified >= 100;
+        return `
+          <div class="p-4 rounded-2xl border border-aware-200 bg-canvas space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-aware-100 text-aware-800">${p.typeLabel}</span>
+              <span class="text-[10px] font-mono text-teal-600 font-bold">✓ Watermark &amp; Akses Penuh</span>
+            </div>
+            <div class="font-bold text-base text-aware-950">${p.title}</div>
+            <p class="text-xs text-slate-600">${p.previewText}</p>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-aware-200/60 text-[11px]">
+              <span class="font-semibold text-aware-800">Grup WhatsApp Komunitas Tema Aktif</span>
+              <span class="font-mono text-slate-500">Progress Webinar: ${p.soldVerified}/100</span>
+            </div>
+            ${
+              unlockedWebinar
+                ? `<div class="p-2.5 rounded-xl bg-teal-50 border border-teal-100 text-[11px] text-teal-600 font-semibold">🎉 Webinar Gratis Terbuka: ${p.webinarSchedule}</div>`
+                : ''
+            }
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderEcosystemPrograms() {
+      const grid = document.getElementById('ecosystem-programs-grid');
+      if (!grid) return;
+      grid.innerHTML = state.ecosystemPrograms.map(prog => `
+        <div class="p-5 rounded-2xl border ${prog.color} flex flex-col justify-between space-y-4">
+          <div class="space-y-2">
+            <span class="text-[10px] font-mono uppercase font-bold px-2.5 py-0.5 rounded-full bg-white/80 border border-current/20">${prog.tag}</span>
+            <h3 class="font-display text-xl text-aware-950">${prog.name}</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">${prog.desc}</p>
+          </div>
+          <button type="button" class="btn-eco-register btn-whimsy w-full py-2.5 px-4 rounded-full bg-aware-800 hover:bg-aware-700 text-white text-xs font-bold" data-name="${prog.name}">
+            ${prog.actionLabel} →
+          </button>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('.btn-eco-register').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const name = btn.getAttribute('data-name');
+          showToast(`Pendaftaran minat untuk ${name} berhasil dicatat! Tim AwareMind akan mengirimkan info seleksi.`);
+        });
+      });
+    }
+
+    let currentPreviewId = null;
+    function openPreviewModal(productId) {
+      const prod = state.products.find(p => p.id === productId);
+      if (!prod) return;
+      currentPreviewId = prod.id;
+      document.getElementById('preview-type-badge').textContent = `${prod.typeLabel} • ${formatRp(prod.price)}`;
+      document.getElementById('preview-title').textContent = prod.title;
+      document.getElementById('preview-body').innerHTML = `
+        <p><strong>Cuplikan Isi &amp; Manfaat Produk:</strong></p>
+        <p>${prod.previewText}</p>
+        <p class="text-aware-800 pt-2 border-t border-aware-200/70"><strong>Keuntungan Tambahan:</strong> Mendapatkan akses Grup WhatsApp Komunitas sesuai tema produk dan dihitung dalam target <strong>100 Pembeli Menuju Webinar Gratis</strong> (${prod.soldVerified}/100 pembeli saat ini).</p>
+      `;
+      const modal = document.getElementById('modal-preview');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function openCheckoutModal(productId) {
+      const prod = state.products.find(p => p.id === productId);
+      if (!prod) return;
+      state.activeCheckoutProduct = prod;
+      state.appliedReferral = null;
+      document.getElementById('checkout-item-title').textContent = prod.title;
+      document.getElementById('input-ref-code').value = '';
+      document.getElementById('ref-feedback-msg').textContent = `Ketik kode teman (misal SOFI05) untuk diskon 5%. Kode sendiri (${state.user.referralCode}) tidak berlaku.`;
+      document.getElementById('ref-feedback-msg').className = 'text-[11px] text-slate-500';
+      const slotBox = document.getElementById('checkout-session-slot-box');
+      if (prod.type === 'session') slotBox.classList.remove('hidden');
+      else slotBox.classList.add('hidden');
+      updateCheckoutPriceDisplay();
+      const modal = document.getElementById('modal-checkout');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function updateCheckoutPriceDisplay() {
+      const prod = state.activeCheckoutProduct;
+      if (!prod) return;
+      const base = prod.price;
+      const discount = state.appliedReferral ? Math.round(base * 0.05) : 0;
+      document.getElementById('checkout-base-price').textContent = formatRp(base);
+      document.getElementById('checkout-discount-amount').textContent = `-Rp ${discount.toLocaleString('id-ID')}`;
+      document.getElementById('checkout-final-price').textContent = formatRp(base - discount);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderHeaderAndTier();
+      renderHomeSpaces();
+      renderJournalHistory();
+      renderCatalog();
+      renderGrowthTogether();
+      renderLibrary();
+      renderEcosystemPrograms();
+      renderGrowthJourneyChart();
+
+      const supportingQuotes = [
+        '"Start where you are. Grow at your own pace."',
+        '"Every journey begins with a single step."',
+        '"Small steps. Meaningful growth."',
+        '"Your journey, your pace, your growth."',
+        '"A little space for a better you."'
+      ];
+      let quoteIdx = 0;
+      document.getElementById('btn-next-quote')?.addEventListener('click', () => {
+        quoteIdx = (quoteIdx + 1) % supportingQuotes.length;
+        document.getElementById('supporting-quote-display').textContent = supportingQuotes[quoteIdx];
+      });
+
+      document.querySelectorAll('.main-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchMainTab(btn.getAttribute('data-target')));
+      });
+
+      document.getElementById('hero-btn-journal')?.addEventListener('click', () => switchMainTab('view-journal'));
+      document.getElementById('hero-btn-explore')?.addEventListener('click', () => switchMainTab('view-catalog'));
+      document.getElementById('hero-btn-ecosystem')?.addEventListener('click', () => switchMainTab('view-ecosystem'));
+      document.getElementById('btn-open-healmind-quick')?.addEventListener('click', () => switchMainTab('view-ecosystem'));
+
+      document.getElementById('btn-switch-tier-demo')?.addEventListener('click', () => {
+        state.user.planTier = state.user.planTier === 'free' ? 'pro' : 'free';
+        renderHeaderAndTier();
+        renderGrowthJourneyChart();
+        showToast(`Status simulasi akun diubah ke: ${state.user.planTier === 'pro' ? 'PREMIUM MEMBER' : 'FREE ACCOUNT'}`);
+      });
+
+      ['btn-header-upgrade', 'btn-journal-upgrade', 'btn-overlay-upgrade'].forEach(id => {
+        document.getElementById(id)?.addEventListener('click', () => openCheckoutModal('pro_pass'));
+      });
+      document.getElementById('btn-overlay-catalog')?.addEventListener('click', () => switchMainTab('view-catalog'));
+
+      document.querySelectorAll('.mood-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedMood = Number(btn.getAttribute('data-score')) || 4;
+          document.querySelectorAll('.mood-btn').forEach(b => {
+            const active = Number(b.getAttribute('data-score')) === state.selectedMood;
+            b.className = active
+              ? 'mood-btn p-2.5 rounded-2xl border-2 border-aware-800 bg-aware-100 text-center font-bold transition-all'
+              : 'mood-btn p-2.5 rounded-2xl border border-aware-200 text-center hover:border-aware-700 transition-all';
+          });
+        });
+      });
+
+      document.getElementById('btn-use-pro-prompt')?.addEventListener('click', () => {
+        if (state.user.planTier === 'free') { openCheckoutModal('pro_pass'); return; }
+        const sp = state.spaces[Math.floor(Math.random() * state.spaces.length)];
+        document.getElementById('active-prompt-text').textContent = `${sp.name}: ${sp.prompt}`;
+        showToast(`Prompt reflektif ruang ${sp.name} dimuat!`);
+      });
+
+      document.getElementById('form-free-journal')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = document.getElementById('journal-entry-input').value.trim();
+        if (!text) return;
+        const sp = state.spaces.find(s => s.id === state.selectedSpaceId) || state.spaces[0];
+        state.journals.unshift({ date: 'Hari Ini', mood: state.selectedMood, space: sp.name, text });
+        document.getElementById('journal-entry-input').value = '';
+        renderJournalHistory();
+        renderGrowthJourneyChart();
+        showToast('Catatan jurnal & mood check-in berhasil disimpan ke ruang pribadimu!');
+      });
+
+      document.getElementById('form-add-goal')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const input = document.getElementById('input-new-goal');
+        const val = input.value.trim();
+        if (!val) return;
+        state.visionGoals.unshift({ id: 'g_' + Date.now(), space: '02. PURPOSE', title: val, progress: 25 });
+        input.value = '';
+        renderJournalHistory();
+        showToast('Target baru berhasil ditambahkan ke Digital Vision Board!');
+      });
+
+      document.getElementById('btn-export-journal')?.addEventListener('click', () => {
+        if (state.user.planTier === 'free') { openCheckoutModal('pro_pass'); return; }
+        showToast('Laporan pola suasana hati & riwayat jurnal siap diunduh!');
+      });
+
+      document.getElementById('filter-space')?.addEventListener('change', renderCatalog);
+      document.getElementById('filter-type')?.addEventListener('change', renderCatalog);
+
+      const closePreview = () => {
+        const m = document.getElementById('modal-preview');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      };
+      document.getElementById('btn-close-preview')?.addEventListener('click', closePreview);
+      document.getElementById('btn-close-preview-2')?.addEventListener('click', closePreview);
+      document.getElementById('btn-buy-from-preview')?.addEventListener('click', () => {
+        closePreview();
+        if (currentPreviewId) openCheckoutModal(currentPreviewId);
+      });
+
+      document.getElementById('btn-apply-ref')?.addEventListener('click', () => {
+        const raw = document.getElementById('input-ref-code').value.trim().toUpperCase();
+        const msg = document.getElementById('ref-feedback-msg');
+        if (!raw) return;
+        if (raw === state.user.referralCode) {
+          state.appliedReferral = null;
+          msg.textContent = '✕ Tidak dapat menggunakan kode referral milikmu sendiri.';
+          msg.className = 'text-[11px] text-coral-600 font-bold';
+        } else if (state.validFriendCodes.includes(raw) || raw.endsWith('05')) {
+          state.appliedReferral = raw;
+          msg.textContent = `✓ Kode ${raw} berhasil dipasang! Diskon 5% aktif.`;
+          msg.className = 'text-[11px] text-teal-600 font-bold';
+        } else {
+          state.appliedReferral = null;
+          msg.textContent = '✕ Kode tidak ditemukan. Gunakan SOFI05 atau ALDO05.';
+          msg.className = 'text-[11px] text-coral-600';
+        }
+        updateCheckoutPriceDisplay();
+      });
+
+      const closeCheckout = () => {
+        const m = document.getElementById('modal-checkout');
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+      };
+      document.getElementById('btn-close-checkout')?.addEventListener('click', closeCheckout);
+      document.getElementById('btn-cancel-checkout')?.addEventListener('click', closeCheckout);
+
+      document.getElementById('btn-confirm-checkout')?.addEventListener('click', () => {
+        const prod = state.activeCheckoutProduct;
+        if (!prod) return;
+        const base = prod.price;
+        const discount = state.appliedReferral ? Math.round(base * 0.05) : 0;
+        const finalAmount = base - discount;
+        const qrisFee = Math.round(finalAmount * 0.007);
+        prod.owned = true;
+        prod.soldVerified += 1;
+        state.user.planTier = 'pro';
+        state.financials.gross += base;
+        state.financials.discountTotal += discount;
+        state.financials.net += (finalAmount - qrisFee);
+        if (state.appliedReferral) state.referralStatsCount += 1;
+        closeCheckout();
+        renderHeaderAndTier();
+        renderHomeSpaces();
+        renderCatalog();
+        renderGrowthTogether();
+        renderLibrary();
+        renderGrowthJourneyChart();
+        showToast(`Transaksi berhasil! "${prod.title}" & undangan Grup WA tersedia di Library.`);
+      });
+
+      document.getElementById('btn-simulate-100')?.addEventListener('click', () => {
+        const targetProd = state.products.find(p => p.id === 'p1_tk');
+        if (targetProd) targetProd.soldVerified = 100;
+        renderHeaderAndTier();
+        renderCatalog();
+        renderGrowthTogether();
+        renderLibrary();
+        showToast('Target 100/100 pembeli tercapai! SELF-DISCOVERY WEBINAR gratis kini resmi dibuka!');
+      });
+
+      document.getElementById('btn-copy-ref')?.addEventListener('click', () => {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = state.user.referralCode;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e) {}
+        showToast(`Kode referral ${state.user.referralCode} berhasil disalin!`);
+      });
+
+      const accModal = document.getElementById('modal-account');
+      document.getElementById('btn-open-account')?.addEventListener('click', () => {
+        accModal.classList.remove('hidden');
+        accModal.classList.add('flex');
+      });
+      document.getElementById('btn-close-account')?.addEventListener('click', () => {
+        accModal.classList.add('hidden');
+        accModal.classList.remove('flex');
+      });
+      document.getElementById('form-account')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newName = document.getElementById('input-user-name').value.trim() || 'User';
+        const cleanPrefix = newName.replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 6) || 'USER';
+        state.user.name = newName;
+        state.user.referralCode = `${cleanPrefix}05`;
+        accModal.classList.add('hidden');
+        accModal.classList.remove('flex');
+        renderHeaderAndTier();
+        showToast(`Profil diperbarui! Kode referral barumu: ${state.user.referralCode}`);
+      });
+
+      const supaModal = document.getElementById('modal-supabase');
+      document.getElementById('btn-open-supabase')?.addEventListener('click', () => {
+        supaModal.classList.remove('hidden');
+        supaModal.classList.add('flex');
+      });
+      document.getElementById('btn-close-supabase')?.addEventListener('click', () => {
+        supaModal.classList.add('hidden');
+        supaModal.classList.remove('flex');
+      });
+      document.getElementById('btn-copy-sql')?.addEventListener('click', () => {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = document.getElementById('supabase-sql-code').textContent;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e) {}
+        showToast('Skrip SQL Supabase E-Commerce berhasil disalin!');
+      });
+    });
+  </script>
+</body>
+</html>
