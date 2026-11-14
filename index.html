@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AwareMind – Your Personal Growth Space | Learning, Sharing, and Caring</title>
+  <title>AwareMind: Your Personal Growth Space | Learning, Sharing, and Caring</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -127,26 +128,20 @@
         </div>
       </div>
 
-      <!-- Center: 5 Clean Single-Line Navigation Links (No Wrapping / No Clutter) -->
-      <nav class="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-700" aria-label="Navigasi Utama">
-        <button type="button" class="main-nav-btn nav-pill-active px-3 py-2 rounded-lg whitespace-nowrap transition-all" data-target="view-home">
-          5 Ruang
+      <!-- Center: 4 Curated Single-Line Tabs (Zero Clutter) -->
+      <nav class="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-slate-700" aria-label="Navigasi Utama">
+        <button type="button" class="main-nav-btn nav-pill-active px-3.5 py-2 rounded-lg whitespace-nowrap transition-all" data-target="view-home">
+          Explore Ruang
         </button>
-        <button type="button" class="main-nav-btn px-3 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all" data-target="view-catalog">
-          Produk &amp; Kelas
+        <button type="button" class="main-nav-btn px-3.5 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all" data-target="view-journal">
+          Premium Space
         </button>
-        <button type="button" class="main-nav-btn px-3 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all" data-target="view-journal">
-          Journaling
+        <button type="button" class="main-nav-btn px-3.5 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all flex items-center gap-1.5" data-target="view-community">
+          <span>Komunitas &amp; Referral</span>
+          <span class="px-1.5 py-0.5 rounded-full bg-aware-800 text-white text-[9px] font-bold">5%</span>
         </button>
-        <button type="button" class="main-nav-btn px-3 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all flex items-center gap-1.5" data-target="view-community">
-          <span>Referral AMA7</span>
-          <span class="px-1.5 py-0.5 rounded-full bg-aware-800 text-white text-[9px] font-bold">-5%</span>
-        </button>
-        <button type="button" class="main-nav-btn px-3 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all" data-target="view-ecosystem">
-          Program AMI
-        </button>
-        <button type="button" class="main-nav-btn px-3 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all flex items-center gap-1.5" data-target="view-library">
-          <span>Library</span>
+        <button type="button" class="main-nav-btn px-3.5 py-2 rounded-lg whitespace-nowrap hover:bg-aware-200/60 hover:text-aware-900 transition-all flex items-center gap-1.5" data-target="view-library">
+          <span>Library Saya</span>
           <span id="badge-library-count" class="px-1.5 py-0.2 rounded bg-aware-800 text-white font-mono text-[10px]">2</span>
         </button>
       </nav>
@@ -162,14 +157,12 @@
       </div>
     </div>
 
-    <!-- Clean Mobile Scroll Nav (Public User Views Only) -->
+    <!-- Clean Mobile Scroll Nav (4 Curated Tabs) -->
     <div class="flex lg:hidden overflow-x-auto px-4 pb-2.5 gap-1.5 text-xs font-semibold text-slate-700 border-t border-aware-200/50 pt-2">
-      <button type="button" class="main-nav-btn nav-pill-active px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-home">5 Ruang</button>
-      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-catalog">Produk &amp; Kelas</button>
-      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-journal">Journaling</button>
-      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-community">Referral AMA7</button>
-      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-ecosystem">Program AMI</button>
-      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-library">Library</button>
+      <button type="button" class="main-nav-btn nav-pill-active px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-home">Explore Ruang</button>
+      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-journal">Premium Space</button>
+      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-community">Komunitas &amp; Referral</button>
+      <button type="button" class="main-nav-btn px-3 py-1.5 rounded-lg shrink-0 whitespace-nowrap" data-target="view-library">Library Saya</button>
     </div>
   </header>
 
@@ -228,7 +221,7 @@
             <!-- Right Column (7 Cols): Title, Icon Metrics, Description, Quote Block & 2 CTAs -->
             <div class="lg:col-span-7 space-y-5">
               <h1 class="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-aware-950 leading-tight tracking-tight">
-                AwareMind – Your Personal Growth Space
+                AwareMind: Your Personal Growth Space
               </h1>
 
               <!-- Inline Metrics Row (Like "17 Topik • 244 Materi" on MySkill) -->
@@ -249,7 +242,7 @@
 
               <!-- Concise Description -->
               <p class="text-sm text-slate-700 leading-relaxed">
-                <strong>Discover Yourself. Develop Your Potential. Become Your Best Self.</strong> Platform digital yang menyediakan ruang belajar dan bertumbuh bagi anak muda melalui <em>Growth Toolkit</em> mandiri, <em>Growth Class</em> tematik, <em>1-on-1 Growth Session</em>, fitur <em>Daily Journaling</em> gratis, serta komunitas.
+                <strong>Discover Yourself. Develop Your Potential. Become Your Best Self.</strong> Platform digital yang menyediakan ruang belajar dan bertumbuh bagi anak muda melalui <em>Growth Toolkit</em> mandiri, <em>Growth Class</em> tematik, <em>Mentoring Privat</em>, fitur <em>Daily Journaling</em> gratis, serta komunitas.
               </p>
 
               <!-- Mentor/Brand Quote Block inside Hero (Like MySkill Tutor Testimonial) -->
@@ -282,7 +275,7 @@
               <h3 class="font-extrabold text-sm text-aware-950">Growth Toolkit</h3>
               <div class="w-10 h-1 bg-aware-800 rounded-full"></div>
               <p class="text-xs text-slate-600 leading-relaxed">
-                Produk digital mandiri berupa e-book, workbook, study planner, dan template kreatif dengan harga terjangkau Rp5.000–Rp10.000.
+                Produk digital mandiri berupa e-book, workbook, study planner, dan template kreatif dengan harga terjangkau Mulai Rp5.000.
               </p>
             </div>
 
@@ -290,7 +283,7 @@
               <h3 class="font-extrabold text-sm text-aware-950">Growth Class &amp; Session</h3>
               <div class="w-10 h-1 bg-aware-800 rounded-full"></div>
               <p class="text-xs text-slate-600 leading-relaxed">
-                Kelas belajar kelompok sesuai tema ruang (Gratis/Berbayar) serta pendampingan 1-on-1 opsional (~Rp100.000/sesi) bersama mentor.
+                Kelas belajar kelompok sesuai tema ruang (Gratis/Berbayar) serta pendampingan Mentoring Privat opsional (~Rp100.000/sesi) bersama mentor.
               </p>
             </div>
 
@@ -315,60 +308,31 @@
       </div>
 
       <!-- ================================================================= -->
-      <!-- MYSKILL-STYLE TOPIC SECTIONS: 5 GROWTH SPACES LEARNING PATH ROWS  -->
-      <!-- ================================================================= -->
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
-
-        <!-- Interactive Space Selector Pills + Detail Overview -->
-        <div class="space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 class="text-xl sm:text-2xl font-extrabold text-aware-950">Eksplorasi Detail 5 Ruang AwareMind</h2>
-              <p class="text-xs text-slate-500">Pilih ruang untuk melihat rincian Toolkit, Growth Class, Mentoring 1-on-1, dan Fitur Website</p>
-            </div>
-          </div>
-          <div id="home-spaces-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3"></div>
-          <div id="home-space-detail" class="ama-card p-6 space-y-5"></div>
-        </div>
-
-        <!-- 5 Synchronized Horizontal Topic Rows (Exactly Like MySkill Learning Path Sections) -->
-        <div id="myskill-learning-path-rows" class="space-y-12"></div>
-
-      </div>
-    </section>
-
-    <!-- =================================================================== -->
-    <!-- VIEW 2: FULL CATALOG & FILTER                                       -->
-    <!-- =================================================================== -->
-    <section id="view-catalog" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-      <div class="ama-card p-6 space-y-6">
-        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-aware-100 pb-4">
+      <!-- CURATED 5 SPACES STOREFRONT (CLEAN & UNCLUTTERED) -->
+      <div id="explore-storefront-anchor" class="max-w-7xl mx-auto px-4 sm:px-6 space-y-6">
+        <div class="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <span class="text-[11px] font-mono uppercase text-aware-700 font-bold">KATALOG LENGKAP 5 RUANG</span>
-            <h2 class="text-2xl font-extrabold text-aware-950 mt-0.5">15 Produk Prioritas Peluncuran, Kelas &amp; Mentoring</h2>
-            <p class="text-xs text-slate-500 mt-0.5">
-              Klik kartu produk mana saja untuk melihat pratinjau isi atau membeli dengan diskon 5% kode referral <code>AMA7...</code>
-            </p>
+            <h2 class="text-2xl font-extrabold text-aware-950">Pilih Ruang &amp; Produk Pengembangan Dirimu</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Klik salah satu ruang untuk menyaring Growth Toolkit, Growth Class, dan Mentoring Privat</p>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <select id="filter-space" aria-label="Filter Ruang" class="text-xs border border-aware-200 rounded-lg px-3.5 py-2 bg-aware-50 font-bold text-aware-900">
-              <option value="ALL">Semua 5 Ruang</option>
-              <option value="1">01. SELF SPACE</option>
-              <option value="2">02. PURPOSE</option>
-              <option value="3">03. BRAIN BOOST</option>
-              <option value="4">04. FUTURE READY</option>
-              <option value="5">05. CREATE</option>
-            </select>
+          <div class="flex items-center gap-2">
             <select id="filter-type" aria-label="Filter Jenis Layanan" class="text-xs border border-aware-200 rounded-lg px-3.5 py-2 bg-aware-50 font-bold text-aware-900">
               <option value="ALL">Semua Jenis Layanan</option>
               <option value="mvp">★ 15 Produk Prioritas (MVP)</option>
-              <option value="toolkit">A. Growth Toolkit (Rp5rb–Rp10rb)</option>
-              <option value="class">B. Growth Class (Kelas Bersama)</option>
-              <option value="session">C. Growth Session (1-on-1 Mentoring)</option>
+              <option value="toolkit">Growth Toolkit (Mulai Rp5.000)</option>
+              <option value="class">Growth Class (Kelas Bersama)</option>
+              <option value="session">Growth Session (Mentoring Privat)</option>
             </select>
           </div>
         </div>
 
+        <!-- 5 Clean Space Tabs -->
+        <div id="home-spaces-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5"></div>
+
+        <!-- Selected Space Concise Summary Strip -->
+        <div id="home-space-detail" class="ama-card p-5"></div>
+
+        <!-- Clean 4-Column MySkill Product Cards Grid -->
         <div id="catalog-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
       </div>
     </section>
@@ -406,7 +370,7 @@
 
           <form id="form-free-journal" class="space-y-4 text-xs">
             <div>
-              <label class="block font-bold text-slate-700 mb-2">Suasana hatimu hari ini (Skala 1–5):</label>
+              <label class="block font-bold text-slate-700 mb-2">Suasana hatimu hari ini (Skala 1 sampai 5):</label>
               <div class="grid grid-cols-5 gap-2" id="mood-selector-group">
                 <button type="button" class="mood-btn p-2.5 rounded-xl border border-aware-200 text-center hover:border-aware-700 transition-all" data-score="1">
                   <div class="text-base font-mono font-bold text-aware-900">1</div>
@@ -456,7 +420,7 @@
           <div class="pt-3 border-t border-aware-100 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-aware-950">Grafik Suasana Hati Sederhana (Free Account):</span>
-              <span class="text-[10px] font-mono text-aware-700 font-semibold">Refleksi Non-Diagnostik</span>
+              <span class="text-[10px] font-mono text-aware-700 font-semibold">Refleksi Refleksi Pribadi</span>
             </div>
             <div class="relative h-44 w-full bg-aware-50/50 p-2 rounded-xl border border-aware-100">
               <canvas id="growthJourneyChart"></canvas>
@@ -583,21 +547,15 @@
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- =================================================================== -->
-    <!-- VIEW 5: EKOSISTEM AWAREMIND INDONESIA (6 PROGRAMS)                  -->
-    <!-- =================================================================== -->
-    <section id="view-ecosystem" class="hidden max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-      <div class="ama-card p-6 space-y-5">
-        <div class="border-b border-aware-100 pb-4">
-          <span class="text-[11px] font-mono uppercase text-aware-700 font-bold">INTEGRASI EKOSISTEM AWAREMIND INDONESIA</span>
-          <h2 class="text-2xl font-extrabold text-aware-950 mt-0.5">6 Program Pengembangan &amp; Kontribusi Komunitas</h2>
-          <p class="text-xs text-slate-600 mt-1">
-            AwareMind Growth Space menjadi pintu masuk bagi pengguna untuk mengenal program resmi AwareMind Indonesia. <em>Keikutsertaan program mengikuti ketentuan dan seleksi masing-masing.</em>
-          </p>
+      <!-- Integrated AwareMind Indonesia Programs (No Separate Wasted Tab) -->
+      <div class="ama-card p-6 space-y-4">
+        <div class="border-b border-aware-100 pb-3">
+          <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">EKOSISTEM AWAREMIND INDONESIA</span>
+          <h3 class="text-xl font-extrabold text-aware-950">Program Komunitas &amp; Kontribusi</h3>
+          <p class="text-xs text-slate-500">Pintu masuk mengenal kegiatan resmi AwareMind Indonesia. Keikutsertaan mengikuti ketentuan dan seleksi masing masing.</p>
         </div>
-        <div id="ecosystem-programs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <div id="ecosystem-programs-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
     </section>
 
@@ -619,35 +577,21 @@
 
         <div class="lg:col-span-6 ama-card p-6 space-y-4">
           <div class="border-b border-aware-100 pb-3">
-            <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">MANAJEMEN TIM &amp; KEUANGAN PKWH</span>
-            <h2 class="text-xl font-extrabold text-aware-950">Pembagian 7 Anggota Tim &amp; Rekap Kas</h2>
+            <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">AKSES GRUP &amp; STATUS AKUN</span>
+            <h2 class="text-xl font-extrabold text-aware-950">Panduan Akses Produk &amp; Komunitas</h2>
           </div>
-
-          <div class="grid grid-cols-3 gap-2.5 text-center font-mono text-xs">
-            <div class="p-3 rounded-xl bg-aware-50 border border-aware-200">
-              <div class="text-[10px] text-slate-500">Omzet Kotor</div>
-              <div id="fin-gross" class="font-extrabold text-sm text-aware-950 mt-0.5">Rp 1.485.000</div>
+          <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
+            <div class="p-4 rounded-xl bg-aware-50 border border-aware-200 space-y-1">
+              <div class="font-bold text-aware-950">1. Akses Seumur Hidup &amp; Watermark</div>
+              <p>Seluruh Growth Toolkit dan materi kelas yang sudah kamu beli tersimpan aman di Library ini.</p>
             </div>
-            <div class="p-3 rounded-xl bg-aware-50 border border-aware-200">
-              <div class="text-[10px] text-slate-500">Diskon Referral 5%</div>
-              <div id="fin-discount" class="font-extrabold text-sm text-aware-700 mt-0.5">-Rp 24.500</div>
+            <div class="p-4 rounded-xl bg-aware-50 border border-aware-200 space-y-1">
+              <div class="font-bold text-aware-950">2. Undangan Grup WhatsApp &amp; Webinar 100 Pembeli</div>
+              <p>Setiap pembelian otomatis membuka tautan grup WhatsApp tematik dan menghitung progres menuju webinar gratis.</p>
             </div>
-            <div class="p-3 rounded-xl bg-aware-100 border border-aware-300">
-              <div class="text-[10px] text-aware-800">Kas Bersih Tim</div>
-              <div id="fin-net" class="font-extrabold text-sm text-aware-950 mt-0.5">Rp 1.450.105</div>
-            </div>
-          </div>
-
-          <div class="space-y-1.5 text-xs">
-            <div class="font-bold text-aware-950">Pembagian Tugas 7 Anggota Tim:</div>
-            <div class="grid grid-cols-1 gap-1.5">
-              <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>1. SELF SPACE LEAD:</strong> Produk, materi, &amp; kelas ruang <em>01. SELF SPACE</em>.</div>
-              <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>2. PURPOSE LEAD:</strong> Produk, materi, &amp; kelas ruang <em>02. PURPOSE</em>.</div>
-              <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>3. BRAIN BOOST LEAD:</strong> Produk, materi, &amp; kelas ruang <em>03. BRAIN BOOST</em>.</div>
-              <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>4. FUTURE READY LEAD:</strong> Produk, materi, &amp; kelas ruang <em>04. FUTURE READY</em>.</div>
-              <div class="p-2.5 rounded-xl bg-aware-50 border border-aware-100"><strong>5. CREATE LEAD:</strong> Produk, materi, &amp; kelas ruang <em>05. CREATE</em>.</div>
-              <div class="p-2.5 rounded-xl bg-aware-100/70 border border-aware-200"><strong>6. WEBSITE &amp; TECHNOLOGY LEAD:</strong> Website, sistem akun, katalog, transaksi Supabase &amp; fitur digital.</div>
-              <div class="p-2.5 rounded-xl bg-aware-100/70 border border-aware-200"><strong>7. FINANCE &amp; BUSINESS ADMIN:</strong> Modal, HPP, harga jual, transaksi, &amp; pencatatan keuangan.</div>
+            <div class="p-4 rounded-xl bg-aware-50 border border-aware-200 space-y-1">
+              <div class="font-bold text-aware-950">3. Ruang Khusus Premium Member</div>
+              <p>Upgrade ke Premium Membership untuk membuka ruang pribadi Journaling, Grafik Emosi, Vision Board, dan Habit Tracker.</p>
             </div>
           </div>
         </div>
@@ -753,9 +697,9 @@
               <div>
                 <label for="upload-service-type" class="block font-bold text-slate-700 mb-1">Kategori Produk / Jasa:</label>
                 <select id="upload-service-type" class="w-full px-3 py-2 rounded-lg border border-aware-200 bg-white font-semibold">
-                  <option value="toolkit">Growth Toolkit (E-Book/Template)</option>
+                  <option value="toolkit">Growth Toolkit (Ebook/Template)</option>
                   <option value="class">Growth Class (Kelas/Workshop)</option>
-                  <option value="session">Growth Session (1-on-1 Mentoring)</option>
+                  <option value="session">Growth Session (Mentoring Privat Mentoring)</option>
                 </select>
               </div>
             </div>
@@ -793,9 +737,33 @@
               </div>
             </div>
 
-            <div>
-              <label for="upload-file-url" class="block font-bold text-slate-700 mb-1">Link Aset Digital (GDrive / Canva) &amp; Grup WA:</label>
-              <input id="upload-file-url" type="text" required value="https://drive.google.com/drive/folders/awaremind-toolkit" class="w-full px-3 py-2 rounded-lg border border-aware-200 font-mono text-[11px] bg-canvas" />
+            <div class="p-3 rounded-xl bg-aware-50 border border-aware-200 space-y-2.5">
+              <div class="font-bold text-aware-900">Foto Produk / Foto Mentor (Tampil di Banner Kartu):</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label for="upload-cover-file" class="block text-[11px] font-semibold text-slate-600 mb-1">Upload Gambar Cover/Produk:</label>
+                  <input id="upload-cover-file" type="file" accept="image/*" class="w-full text-[11px] file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:bg-aware-800 file:text-white file:font-bold cursor-pointer" />
+                </div>
+                <div>
+                  <label for="upload-cover-url" class="block text-[11px] font-semibold text-slate-600 mb-1">Atau Tempel URL Gambar:</label>
+                  <input id="upload-cover-url" type="url" placeholder="https://.../cover-produk.jpg" class="w-full px-2.5 py-1.5 rounded-lg border border-aware-200 bg-white text-[11px] font-mono" />
+                </div>
+              </div>
+              <div id="upload-cover-preview-wrap" class="hidden items-center gap-2 text-[11px] text-aware-800 font-semibold">
+                <img id="upload-cover-preview-img" src="" alt="Preview Cover" class="w-12 h-12 rounded-lg object-cover border border-aware-300" />
+                <span>✓ Foto cover siap dipasang ke kartu produk!</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div>
+                <label for="upload-file-url" class="block font-bold text-slate-700 mb-1">Link File Produk (Drive/Canva):</label>
+                <input id="upload-file-url" type="url" required value="https://drive.google.com/drive/folders/awaremind-toolkit" class="w-full px-3 py-2 rounded-lg border border-aware-200 font-mono text-[11px] bg-canvas" />
+              </div>
+              <div>
+                <label for="upload-wa-url" class="block font-bold text-slate-700 mb-1">Link Grup WhatsApp Tema:</label>
+                <input id="upload-wa-url" type="url" required value="https://chat.whatsapp.com/awaremind-space" class="w-full px-3 py-2 rounded-lg border border-aware-200 font-mono text-[11px] bg-canvas" />
+              </div>
             </div>
 
             <div>
@@ -816,8 +784,46 @@
           </form>
         </div>
 
-        <!-- Right 7 Cols: Admin Approval Queue & 90/10 Creator Ledger -->
+        <!-- Right 7 Cols: Payment Verification, Catalog Manager, Approval Queue & 90/10 Ledger -->
         <div class="lg:col-span-7 space-y-6">
+
+          <!-- Card 0: Verifikasi Pembayaran QRIS Pembeli -->
+          <div class="ama-card p-6 space-y-4 border-l-4 border-l-cta-500">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-aware-100 pb-3">
+              <div>
+                <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">VERIFIKASI PEMBAYARAN QRIS</span>
+                <h3 class="text-lg font-extrabold text-aware-950">Pesanan Masuk &amp; Bukti Transfer Pembeli</h3>
+                <p class="text-xs text-slate-500">Klik <strong>Verifikasi Lunas</strong> setelah mengecek mutasi QRIS untuk membuka akses produk di Library pembeli.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="px-3 py-1.5 rounded-lg bg-aware-100 hover:bg-aware-200 text-aware-900 font-bold text-xs cursor-pointer">
+                  <span>Ganti Gambar QRIS Toko</span>
+                  <input id="admin-qris-upload" type="file" accept="image/*" class="hidden" />
+                </label>
+              </div>
+            </div>
+            <div id="admin-orders-queue" class="space-y-2.5 max-h-64 overflow-y-auto"></div>
+          </div>
+
+          <!-- Card 0B: Kelola Katalog Aktif (Hapus Contoh / Reset untuk Besok Upload Asli) -->
+          <div class="ama-card p-6 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-aware-100 pb-3">
+              <div>
+                <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">MANAJEMEN KATALOG ETALASE (<span id="admin-active-prod-count">21</span> PRODUK)</span>
+                <h3 class="text-lg font-extrabold text-aware-950">Daftar Produk Aktif di Website</h3>
+                <p class="text-xs text-slate-500">Semua produk baru yang kamu upload otomatis tersimpan di browser &amp; Supabase. Kamu bisa menghapus produk contoh kapan saja.</p>
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button id="btn-clear-sample-products" type="button" class="px-3 py-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 font-bold text-xs">
+                  Kosongkan Produk Contoh
+                </button>
+                <button id="btn-restore-default-products" type="button" class="px-3 py-1.5 rounded-lg border border-aware-200 text-aware-800 hover:bg-aware-50 font-bold text-xs">
+                  Reset 15 MVP Awal
+                </button>
+              </div>
+            </div>
+            <div id="admin-active-catalog-list" class="space-y-2 max-h-60 overflow-y-auto pr-1 text-xs"></div>
+          </div>
 
           <!-- Card 1: Admin Verification Queue -->
           <div class="ama-card p-6 space-y-4">
@@ -863,6 +869,29 @@
             </div>
           </div>
 
+          <!-- Card 3: Full-Stack Live Supabase Connection Panel -->
+          <div class="ama-card p-6 space-y-3 border-t-4 border-t-aware-800">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">KONEKSI FULL-STACK SUPABASE</span>
+                <h3 class="text-base font-extrabold text-aware-950">Hubungkan ke Database Supabase Asli (Live Sync)</h3>
+              </div>
+              <span id="supabase-live-status" class="px-2.5 py-1 rounded-full bg-aware-100 text-aware-800 font-mono text-[10px] font-bold">
+                Mode Lokal (Siap Sambung)
+              </span>
+            </div>
+            <p class="text-xs text-slate-600">
+              Tempelkan <strong>Project URL</strong> &amp; <strong>Anon Key</strong> dari Supabase-mu di sini agar setiap upload produk, foto cover, jurnal, dan transaksi checkout langsung tersimpan permanen ke PostgreSQL Supabase.
+            </p>
+            <form id="form-supabase-connect" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <input id="input-supa-url" type="url" placeholder="https://xxxx.supabase.co" class="px-3 py-2 rounded-lg border border-aware-200 font-mono bg-canvas" />
+              <input id="input-supa-key" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="px-3 py-2 rounded-lg border border-aware-200 font-mono bg-canvas" />
+              <button type="submit" class="sm:col-span-2 py-2.5 rounded-lg bg-aware-800 hover:bg-aware-900 text-white font-bold">
+                Simpan &amp; Aktifkan Sinkronisasi Supabase Live
+              </button>
+            </form>
+          </div>
+
         </div>
 
       </div>
@@ -904,8 +933,8 @@
         <div class="space-y-2">
           <div class="font-extrabold text-aware-950 uppercase text-[11px] tracking-wider">Layanan &amp; Program</div>
           <ul class="space-y-1.5 text-[11px]">
-            <li>Growth Toolkit (Rp5.000–Rp10.000)</li>
-            <li>Growth Class &amp; 1-on-1 Session</li>
+            <li>Growth Toolkit (Mulai Rp5.000)</li>
+            <li>Growth Class &amp; Mentoring Privat</li>
             <li>Program 100 Pembeli Webinar Gratis</li>
             <li>Heal Mind &amp; AwareMind Ambassador</li>
           </ul>
@@ -927,7 +956,7 @@
       </div>
 
       <div class="border-t border-aware-200 pt-4 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500">
-        <span>© 2026 AwareMind Indonesia — Your Personal Growth Space. All rights reserved.</span>
+        <span>© 2026 AwareMind Indonesia · Your Personal Growth Space. All rights reserved.</span>
         <div class="flex flex-wrap items-center gap-3">
           <button id="btn-footer-admin-door" type="button" class="text-aware-800 hover:underline font-bold">
             Portal Admin &amp; Tim Internal (Pintu 2)
@@ -941,9 +970,9 @@
     </div>
   </footer>
 
-  <!-- MODAL 1: CHECKOUT & OFFICIAL AMA7 REFERRAL -->
-  <div id="modal-checkout" class="fixed inset-0 bg-aware-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-aware-200">
+  <!-- MODAL 1: CHECKOUT QRIS, BUKTI BAYAR & OFFICIAL AMA7 REFERRAL -->
+  <div id="modal-checkout" class="fixed inset-0 bg-aware-950/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-aware-200 my-8">
       <div class="flex items-center justify-between border-b border-aware-100 pb-3">
         <div>
           <span class="text-[10px] font-mono uppercase text-aware-700 font-bold">Checkout QRIS &amp; Referral AMA Batch 7</span>
@@ -952,16 +981,17 @@
         <button id="btn-close-checkout" type="button" class="text-slate-400 hover:text-slate-700 font-bold px-2">✕</button>
       </div>
 
-      <div id="checkout-session-slot-box" class="hidden p-3.5 rounded-xl bg-aware-50 border border-aware-200 space-y-1.5 text-xs">
-        <label for="checkout-slot-select" class="block font-bold text-aware-900">Pilih Jadwal 1-on-1 Growth Session (Opsional):</label>
+      <div id="checkout-session-slot-box" class="hidden p-3 rounded-xl bg-aware-50 border border-aware-200 space-y-1.5 text-xs">
+        <label for="checkout-slot-select" class="block font-bold text-aware-900">Pilih Jadwal Mentoring Privat:</label>
         <select id="checkout-slot-select" class="w-full px-3 py-2 rounded-lg border border-aware-200 bg-white">
-          <option value="Sabtu, 16.00 - 17.00 WIB">Sabtu, 16.00 – 17.00 WIB (Tersisa 2 Kuota)</option>
-          <option value="Minggu, 10.00 - 11.00 WIB">Minggu, 10.00 – 11.00 WIB (Tersisa 1 Kuota)</option>
-          <option value="Selasa, 19.30 - 20.30 WIB">Selasa, 19.30 – 20.30 WIB (Tersisa 2 Kuota)</option>
+          <option value="Sabtu, 16.00 s.d. 17.00 WIB">Sabtu, 16.00 s.d. 17.00 WIB (Tersisa 2 Kuota)</option>
+          <option value="Minggu, 10.00 s.d. 11.00 WIB">Minggu, 10.00 s.d. 11.00 WIB (Tersisa 1 Kuota)</option>
+          <option value="Selasa, 19.30 s.d. 20.30 WIB">Selasa, 19.30 s.d. 20.30 WIB (Tersisa 2 Kuota)</option>
         </select>
       </div>
 
-      <div class="p-3.5 rounded-xl bg-canvas border border-aware-200 space-y-2 text-xs">
+      <!-- Referral Code Input -->
+      <div class="p-3 rounded-xl bg-canvas border border-aware-200 space-y-2 text-xs">
         <label for="input-ref-code" class="block font-bold text-slate-700">Kode Referral AMA Batch 7 (Diskon 5%):</label>
         <div class="flex gap-2">
           <input id="input-ref-code" type="text" placeholder="Contoh: AMA7DOP-SHAILA" class="flex-1 px-3 py-2 rounded-lg border border-aware-200 uppercase font-mono bg-white text-xs" />
@@ -974,27 +1004,56 @@
         </div>
       </div>
 
-      <div class="p-4 rounded-xl bg-aware-950 text-white space-y-1.5 font-mono text-xs">
-        <div class="flex justify-between">
-          <span class="text-purple-200">Harga Produk:</span>
-          <span id="checkout-base-price">Rp 10.000</span>
+      <!-- QRIS Scan Box & Total Breakdown -->
+      <div class="p-4 rounded-xl bg-aware-950 text-white space-y-3 font-mono text-xs">
+        <div class="flex items-center justify-between gap-3 bg-white text-aware-950 p-3 rounded-xl">
+          <div class="space-y-1 font-sans">
+            <div class="text-[10px] font-mono uppercase font-bold text-aware-700">SCAN QRIS AWAREMIND</div>
+            <div class="font-extrabold text-xs">AwareMind Growth Space</div>
+            <div class="text-[10px] text-slate-500">Mendukung GoPay, OVO, DANA, ShopeePay, M-Banking</div>
+          </div>
+          <div class="w-20 h-20 rounded-lg border-2 border-aware-800 bg-aware-50 flex items-center justify-center shrink-0 overflow-hidden" id="checkout-qris-box">
+            <svg class="w-16 h-16 text-aware-900" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-3 0h2v3h-2v-3zm3 3h3v2h-3v-2zm-3 3h2v2h-2v-2zm3 0h3v2h-3v-2z"/>
+            </svg>
+          </div>
         </div>
-        <div class="flex justify-between">
-          <span class="text-purple-200">Diskon Referral (5%):</span>
-          <span id="checkout-discount-amount" class="text-cta-500">-Rp 0</span>
+
+        <div class="space-y-1">
+          <div class="flex justify-between">
+            <span class="text-purple-200">Harga Produk:</span>
+            <span id="checkout-base-price">Rp 10.000</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-purple-200">Diskon Referral (5%):</span>
+            <span id="checkout-discount-amount" class="text-cta-500">-Rp 0</span>
+          </div>
+          <div class="border-t border-white/15 pt-1.5 flex justify-between text-sm font-bold">
+            <span class="font-sans">Total Transfer QRIS:</span>
+            <span id="checkout-final-price" class="text-cta-500">Rp 10.000</span>
+          </div>
         </div>
-        <div class="border-t border-white/15 pt-2 flex justify-between text-sm font-bold">
-          <span class="font-sans">Total Pembayaran QRIS:</span>
-          <span id="checkout-final-price" class="text-cta-500">Rp 10.000</span>
+      </div>
+
+      <!-- Buyer Contact & Proof of Payment Upload -->
+      <div class="p-3 rounded-xl bg-aware-50 border border-aware-200 space-y-2.5 text-xs">
+        <div>
+          <label for="checkout-buyer-wa" class="block font-bold text-aware-950 mb-1">Nomor WhatsApp Aktif (Untuk Link Grup &amp; Notifikasi):</label>
+          <input id="checkout-buyer-wa" type="tel" placeholder="Contoh: 081234567890" value="081278901234" class="w-full px-3 py-2 rounded-lg border border-aware-200 bg-white font-mono text-xs" />
+        </div>
+        <div>
+          <label for="checkout-proof-file" class="block font-bold text-aware-950 mb-1">Upload Screenshot Bukti Bayar QRIS:</label>
+          <input id="checkout-proof-file" type="file" accept="image/*" class="w-full text-[11px] file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:bg-aware-800 file:text-white file:font-bold cursor-pointer" />
+          <div id="checkout-proof-status" class="text-[10px] text-slate-500 mt-1">Opsional saat uji coba: klik Bayar Sekarang untuk langsung simulasi lunas, atau unggah bukti untuk masuk antrean verifikasi Admin.</div>
         </div>
       </div>
 
       <div class="flex gap-2">
-        <button id="btn-cancel-checkout" type="button" class="flex-1 py-2.5 rounded-xl border border-aware-200 text-slate-700 font-bold text-xs hover:bg-aware-50">
+        <button id="btn-cancel-checkout" type="button" class=" py-2.5 px-4 rounded-xl border border-aware-200 text-slate-700 font-bold text-xs hover:bg-aware-50">
           Batal
         </button>
-        <button id="btn-confirm-checkout" type="button" class="flex-1 py-2.5 rounded-xl bg-cta-500 hover:bg-cta-600 text-aware-950 font-extrabold text-xs shadow-sm">
-          ✓ Bayar Sekarang
+        <button id="btn-confirm-checkout" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-cta-500 hover:bg-cta-600 text-aware-950 font-extrabold text-xs shadow-sm">
+          ✓ Kirim Bukti &amp; Buka Akses
         </button>
       </div>
     </div>
@@ -1091,6 +1150,7 @@ CREATE TABLE IF NOT EXISTS public.creator_products (
   service_type TEXT NOT NULL CHECK (service_type IN ('toolkit', 'class', 'session')),
   title TEXT NOT NULL,
   price_idr INT NOT NULL,
+  cover_image_url TEXT,
   asset_url TEXT NOT NULL,
   preview_text TEXT NOT NULL,
   approval_status TEXT DEFAULT 'pending' CHECK (approval_status IN ('pending', 'approved', 'rejected')),
@@ -1214,12 +1274,27 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
 
     const state = {
       user: { name: 'Fatih', planTier: 'free', referralCode: 'AMA7-FATIH' },
-      selectedSpaceId: 1,
+      selectedSpaceId: 0,
       selectedMood: 4,
       activeCheckoutProduct: null,
       appliedReferral: null,
       referralStatsCount: 18,
       financials: { gross: 1485000, discountTotal: 24500, net: 1460500, webFee10: 146050, creatorNet90: 1314450 },
+      customQrisImage: '',
+      buyerOrders: [
+        {
+          orderId: 'ORD-8901',
+          buyerName: 'Nadia Putri',
+          buyerWa: '081290887766',
+          productId: 'p1_tk2',
+          productTitle: 'Daily Journal & Gratitude Journal Pack',
+          referralUsed: 'AMA7DOP-SHAILA',
+          finalPaid: 5700,
+          status: 'pending_verification',
+          proofUploaded: true,
+          createdAt: '14 Nov 2026 · 20.40 WIB'
+        }
+      ],
       pendingSubmissions: [
         {
           id: 'pend_1',
@@ -1240,9 +1315,9 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
           creatorName: 'Soraya Mumtaz (AMA7 Oxytocin)',
           spaceId: 4,
           type: 'session',
-          typeLabel: '1-on-1 Session',
-          shortBanner: '1-ON-1 ESSAY BRAINSTORMING',
-          title: '1-on-1 Scholarship Essay Brainstorming & Peer Review',
+          typeLabel: 'Mentoring Privat',
+          shortBanner: 'MENTORING ESSAY',
+          title: 'Mentoring Privat Scholarship Essay Brainstorming & Peer Review',
           price: 75000,
           modulesCount: 'Privat 45 Menit',
           assetUrl: 'https://meet.google.com/awaremind-mentoring',
@@ -1251,24 +1326,24 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         }
       ],
       creatorLedger: [
-        { creator: 'Self Space Lead', spaceName: '01. SELF SPACE', itemTitle: 'Self-Discovery Workbook & Mood Tracker', grossSales: 480000 },
+        { creator: 'Self Space Lead', spaceName: '01. SELF SPACE', itemTitle: 'Self Discovery Workbook & Mood Tracker', grossSales: 480000 },
         { creator: 'Purpose Lead', spaceName: '02. PURPOSE', itemTitle: 'Digital Vision Board & Habit Tracker', grossSales: 295000 },
-        { creator: 'Brain Boost Lead', spaceName: '03. BRAIN BOOST', itemTitle: 'Study Planner & Psychology E-book', grossSales: 310000 },
-        { creator: 'Future Ready Lead', spaceName: '04. FUTURE READY', itemTitle: 'CV Template, Scholarship & 1-on-1 Review', grossSales: 245000 },
+        { creator: 'Brain Boost Lead', spaceName: '03. BRAIN BOOST', itemTitle: 'Study Planner & Psychology Ebook', grossSales: 310000 },
+        { creator: 'Future Ready Lead', spaceName: '04. FUTURE READY', itemTitle: 'CV Template, Scholarship & Mentoring Privat', grossSales: 245000 },
         { creator: 'Create Lead', spaceName: '05. CREATE', itemTitle: 'Canva Template & Presentation Kit', grossSales: 130500 }
       ],
       spaces: [
         {
           id: 1,
           name: '01. SELF SPACE',
-          sub: 'Self-Awareness & Emotional Well-being',
+          sub: 'Self Awareness & Emotional Wellbeing',
           leadRole: 'SELF SPACE LEAD',
           thumbClass: 'thumb-space-1',
           desc: 'Ruang untuk mengenali diri, memahami emosi, melakukan refleksi, dan membangun hubungan yang lebih sehat dengan diri sendiri.',
           goalText: 'Membantu pengguna lebih memahami dirinya, mengenali emosi, dan membangun kebiasaan refleksi diri.',
           prompt: '"Emosi apa yang paling sering hadir minggu ini, dan apa kebutuhan dirimu di balik emosi tersebut?"',
           badgeColor: 'bg-aware-100 text-aware-800 border-aware-200',
-          allToolkits: ['Daily Journal', 'Mood Tracker', 'Self-Discovery Workbook', 'Emotional Awareness Workbook', 'Self-Care Planner', 'Gratitude Journal', 'Reflection Cards'],
+          allToolkits: ['Daily Journal', 'Mood Tracker', 'Self Discovery Workbook', 'Emotional Awareness Workbook', 'Self Care Planner', 'Gratitude Journal', 'Reflection Cards'],
           allClasses: ['Understanding Yourself', 'Emotional Awareness', 'Journaling for Self-Growth', 'Healthy Digital Habits', 'Self-Compassion'],
           allSessions: ['Self-Discovery Session', 'Journaling Guidance', 'Personal Reflection Session'],
           webFeatures: ['Daily journaling', 'Daily mood check-in', 'Mood history', 'Grafik perubahan suasana hati', 'Journal library', 'Journaling prompts', 'Weekly reflection']
@@ -1285,7 +1360,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
           badgeColor: 'bg-aware-100 text-aware-800 border-aware-200',
           allToolkits: ['Purpose of Life Workbook', 'Vision Board Template', 'Life Planner', 'Goal Setting Workbook', 'Habit Tracker', 'Monthly Reset Planner', 'Dream Mapping Template'],
           allClasses: ['Finding Your Purpose', 'How to Set Meaningful Goals', 'Building Better Habits', 'Vision Board Workshop', 'Time Management for Young People', 'From Dream to Action'],
-          allSessions: ['Personal Goal-Setting Session', 'Life Planning Session', 'Habit-Building Session'],
+          allSessions: ['Personal Goal Setting Session', 'Life Planning Session', 'Habit-Building Session'],
           webFeatures: ['Personal goal dashboard', 'Goal progress tracker', 'Habit tracker', 'Monthly reflection', 'Digital vision board', 'Reminder target pribadi']
         },
         {
@@ -1298,7 +1373,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
           goalText: 'Membantu pengguna meningkatkan kemampuan belajar dan mendapatkan akses terhadap sumber belajar yang praktis serta terjangkau.',
           prompt: '"Topik akademik apa yang sedang kamu pelajari, dan metode belajar apa yang paling membantumu fokus?"',
           badgeColor: 'bg-aware-100 text-aware-800 border-aware-200',
-          allToolkits: ['Study Planner', 'Exam Preparation Planner', 'Learning Tracker', 'Psychology E-book', 'Study Notes', 'Flashcard Template', 'Research Planner', 'Note-taking Template'],
+          allToolkits: ['Study Planner', 'Exam Preparation Planner', 'Learning Tracker', 'Psychology Ebook', 'Study Notes', 'Flashcard Template', 'Research Planner', 'Catatan Kuliah Template'],
           allClasses: ['Effective Learning Strategies', 'How to Study Smarter', 'Critical Thinking Skills', 'Academic Writing Basics', 'Research Skills for Students', 'Study Productivity'],
           allSessions: ['Study Planning Session', 'Academic Productivity Session', 'Learning Strategy Session'],
           webFeatures: ['Digital study planner', 'Learning progress tracker', 'Materi dan e-book library', 'Kategori materi berdasarkan topik', 'Informasi kelas dan webinar', 'Riwayat produk yang dibeli']
@@ -1336,29 +1411,29 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       ],
       products: [
         // 01. SELF SPACE
-        { id: 'p1_tk', spaceId: 1, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'SELF-DISCOVERY WORKBOOK', title: 'Self-Discovery Workbook & Reflection Cards', price: 10000, soldVerified: 68, rating: '4,92', modulesCount: '7 Modul & Kartu', webinarTitle: 'SELF-DISCOVERY WEBINAR: Understanding Yourself', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Panduan mengenali nilai diri, peta kesadaran emosi, dan lembar kerja refleksi mandiri.', owned: true },
+        { id: 'p1_tk', spaceId: 1, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'SELF DISCOVERY WORKBOOK', title: 'Self Discovery Workbook & Reflection Cards', price: 10000, soldVerified: 68, rating: '4,92', modulesCount: '7 Modul & Kartu', webinarTitle: 'SELF-DISCOVERY WEBINAR: Understanding Yourself', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Panduan mengenali nilai diri, peta kesadaran emosi, dan lembar kerja refleksi mandiri.', owned: true },
         { id: 'p1_tk2', spaceId: 1, stepNum: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'DAILY & GRATITUDE JOURNAL', title: 'Daily Journal & Gratitude Journal Pack', price: 6000, soldVerified: 74, rating: '4,89', modulesCount: '30 Prompt Harian', webinarTitle: 'Journaling for Self-Growth Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Template jurnal harian terstruktur, 30 prompt refleksi diri, dan lembar syukur harian.', owned: false },
-        { id: 'p1_tk3', spaceId: 1, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'MOOD & SELF-CARE PLANNER', title: 'Mood Tracker & Self-Care Planner', price: 5000, soldVerified: 82, rating: '4,95', modulesCount: '12 Tracker Bulanan', webinarTitle: 'Healthy Digital Habits Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Pelacak suasana hati bulanan (non-diagnostik) dan perencana rutinitas self-care mahasiswa.', owned: true },
+        { id: 'p1_tk3', spaceId: 1, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'MOOD & SELF CARE PLANNER', title: 'Mood Tracker & Self Care Planner', price: 5000, soldVerified: 82, rating: '4,95', modulesCount: '12 Tracker Bulanan', webinarTitle: 'Healthy Digital Habits Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Self Space Aktif', previewText: 'Pelacak suasana hati bulanan (refleksi pribadi) dan perencana rutinitas self-care mahasiswa.', owned: true },
         { id: 'p1_cl', spaceId: 1, stepNum: 4, isMvp: false, type: 'class', typeLabel: 'Growth Class', shortBanner: 'EMOTIONAL AWARENESS CLASS', title: 'Emotional Awareness & Healthy Digital Habits Class', price: 25000, soldVerified: 45, rating: '4,90', modulesCount: 'Sesi Live 90 Menit', webinarTitle: 'Sesi Kelas Ruang SELF SPACE', webinarSchedule: 'Sabtu, 28 Nov 2026 • 19.30 WIB', previewText: 'Kelas interaktif memahami sinyal emosi dan membangun kebiasaan digital yang sehat.', owned: false },
-        { id: 'p1_ss', spaceId: 1, stepNum: 5, isMvp: false, type: 'session', typeLabel: '1-on-1 Session', shortBanner: '1-ON-1 SELF-DISCOVERY', title: '1-on-1 Self-Discovery & Journaling Guidance', price: 100000, soldVerified: 14, rating: '4,98', modulesCount: 'Privat 60 Menit', webinarTitle: 'Mentoring Personal SELF SPACE', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Pendampingan 1-on-1 bersama Self Space Lead untuk eksplorasi diri dan kebiasaan refleksi.', owned: false },
+        { id: 'p1_ss', spaceId: 1, stepNum: 5, isMvp: false, type: 'session', typeLabel: 'Mentoring Privat', shortBanner: 'MENTORING SELF DISCOVERY', title: 'Mentoring Privat Self-Discovery & Journaling Guidance', price: 100000, soldVerified: 14, rating: '4,98', modulesCount: 'Privat 60 Menit', webinarTitle: 'Mentoring Personal SELF SPACE', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Pendampingan Mentoring Privat bersama Self Space Lead untuk eksplorasi diri dan kebiasaan refleksi.', owned: false },
 
         // 02. PURPOSE
-        { id: 'p2_tk', spaceId: 2, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'DIGITAL VISION BOARD', title: 'Digital Vision Board & Dream Mapping Template', price: 8000, soldVerified: 79, rating: '4,91', modulesCount: '6 Kanvas Tujuan', webinarTitle: 'VISION BOARD WEBINAR: From Dream to Action', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Kanvas visual penyusun impian 1–3 tahun ke depan dan peta langkah aksi konkret.', owned: false },
+        { id: 'p2_tk', spaceId: 2, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'DIGITAL VISION BOARD', title: 'Digital Vision Board & Dream Mapping Template', price: 8000, soldVerified: 79, rating: '4,91', modulesCount: '6 Kanvas Tujuan', webinarTitle: 'VISION BOARD WEBINAR: From Dream to Action', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Kanvas visual penyusun impian 1 sampai 3 tahun ke depan dan peta langkah aksi konkret.', owned: false },
         { id: 'p2_tk2', spaceId: 2, stepNum: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'GOAL SETTING WORKBOOK', title: 'Goal Setting Workbook & Purpose of Life Guide', price: 10000, soldVerified: 64, rating: '4,88', modulesCount: '8 Lembar Kerja', webinarTitle: 'How to Set Meaningful Goals Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Workbook penyusunan target SMART yang bermakna tanpa merasa kewalahan.', owned: false },
         { id: 'p2_tk3', spaceId: 2, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'HABIT & MONTHLY RESET', title: 'Habit Tracker & Monthly Reset Planner', price: 6000, soldVerified: 91, rating: '4,94', modulesCount: 'Tracker 30 Hari', webinarTitle: 'Building Better Habits Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Purpose Aktif', previewText: 'Pelacak pembentukan kebiasaan 30 hari dan evaluasi reset bulanan.', owned: false },
-        { id: 'p2_ss', spaceId: 2, stepNum: 4, isMvp: false, type: 'session', typeLabel: '1-on-1 Session', shortBanner: '1-ON-1 LIFE PLANNING', title: '1-on-1 Personal Goal-Setting & Life Planning', price: 100000, soldVerified: 11, rating: '4,97', modulesCount: 'Privat 60 Menit', webinarTitle: 'Mentoring Personal PURPOSE', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Sesi 1-on-1 bersama Purpose Lead untuk menyusun peta tujuan dan langkah realistis.', owned: false },
+        { id: 'p2_ss', spaceId: 2, stepNum: 4, isMvp: false, type: 'session', typeLabel: 'Mentoring Privat', shortBanner: 'MENTORING LIFE PLANNING', title: 'Mentoring Privat Personal Goal Setting & Life Planning', price: 100000, soldVerified: 11, rating: '4,97', modulesCount: 'Privat 60 Menit', webinarTitle: 'Mentoring Personal PURPOSE', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Sesi Mentoring Privat bersama Purpose Lead untuk menyusun peta tujuan dan langkah realistis.', owned: false },
 
         // 03. BRAIN BOOST
         { id: 'p3_tk', spaceId: 3, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'STUDY & EXAM PLANNER', title: 'Study Planner & Exam Preparation Planner', price: 7500, soldVerified: 88, rating: '4,93', modulesCount: '10 Template Studi', webinarTitle: 'BRAIN BOOST WEBINAR: How to Study Smarter', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Perencana jadwal belajar semester, persiapan ujian, dan pembagian fokus harian.', owned: false },
         { id: 'p3_tk2', spaceId: 3, stepNum: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'LEARNING & RESEARCH TRACKER', title: 'Learning Tracker & Research Planner', price: 7500, soldVerified: 72, rating: '4,87', modulesCount: 'Tracker Skripsi/Riset', webinarTitle: 'Research Skills & Critical Thinking Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Tracker progres pemahaman mata kuliah, bacaan jurnal, dan rencana riset mahasiswa.', owned: false },
-        { id: 'p3_tk3', spaceId: 3, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'PSYCHOLOGY E-BOOK & NOTES', title: 'Study Notes, Psychology E-book & Flashcards', price: 10000, soldVerified: 95, rating: '4,96', modulesCount: 'E-Book + Cornell', webinarTitle: 'Academic Writing Basics Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Rangkuman materi psikologi populer, sistem pencatatan Cornell, dan kartu belajar aktif.', owned: false },
+        { id: 'p3_tk3', spaceId: 3, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'PSYCHOLOGY E-BOOK & NOTES', title: 'Study Notes, Psychology Ebook & Flashcards', price: 10000, soldVerified: 95, rating: '4,96', modulesCount: 'Ebook + Cornell', webinarTitle: 'Academic Writing Basics Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Brain Boost Aktif', previewText: 'Rangkuman materi psikologi populer, sistem pencatatan Cornell, dan kartu belajar aktif.', owned: false },
         { id: 'p3_cl', spaceId: 3, stepNum: 4, isMvp: false, type: 'class', typeLabel: 'Growth Class', shortBanner: 'EFFECTIVE LEARNING CLASS', title: 'Effective Learning Strategies & Productivity Class', price: 20000, soldVerified: 52, rating: '4,91', modulesCount: 'Sesi Live 90 Menit', webinarTitle: 'Kelas Bersama BRAIN BOOST', webinarSchedule: 'Minggu, 29 Nov 2026 • 16.00 WIB', previewText: 'Sesi belajar kelompok membahas teknik belajar efektif, berpikir kritis, dan manajemen fokus.', owned: false },
 
         // 04. FUTURE READY
-        { id: 'p4_tk', spaceId: 4, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'ATS CV & PORTFOLIO KIT', title: 'CV Template & Professional Portfolio Template', price: 8000, soldVerified: 100, rating: '4,97', modulesCount: '8 Template ATS', webinarTitle: 'FUTURE READY WEBINAR: From Campus to Career', webinarSchedule: 'TERBUKA (100/100)! Jumat, 27 Nov 2026 • 19.30 WIB', previewText: 'Template CV ATS-friendly dan kerangka penyusunan portofolio organisasi, magang, & karier.', owned: false },
+        { id: 'p4_tk', spaceId: 4, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'ATS CV & PORTFOLIO KIT', title: 'CV Template & Professional Portfolio Template', price: 8000, soldVerified: 100, rating: '4,97', modulesCount: '8 Template ATS', webinarTitle: 'FUTURE READY WEBINAR: From Campus to Career', webinarSchedule: 'TERBUKA (100/100)! Jumat, 27 Nov 2026 • 19.30 WIB', previewText: 'Template CV ramah ATS dan kerangka penyusunan portofolio organisasi, magang, & karier.', owned: false },
         { id: 'p4_tk2', spaceId: 4, stepNum: 2, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'SCHOLARSHIP & ESSAY GUIDE', title: 'Scholarship Guidebook, Essay & Motivation Letter', price: 10000, soldVerified: 89, rating: '4,95', modulesCount: 'Panduan + Contoh Esai', webinarTitle: 'Scholarship Preparation Webinar', webinarSchedule: 'Target 100 Pembeli • Grup WA Future Ready Aktif', previewText: 'Panduan lengkap persiapan beasiswa, struktur esai pemenang, dan kerangka motivation letter.', owned: false },
-        { id: 'p4_tk3', spaceId: 4, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'STAR INTERVIEW PREP KIT', title: 'Interview Preparation Kit & Personal Branding', price: 9000, soldVerified: 77, rating: '4,90', modulesCount: '50 Tanya-Jawab STAR', webinarTitle: 'Interview Skills & Personal Branding 101', webinarSchedule: 'Target 100 Pembeli • Grup WA Future Ready Aktif', previewText: 'Panduan menjawab wawancara metode STAR dan buku kerja personal branding mahasiswa.', owned: false },
-        { id: 'p4_ss', spaceId: 4, stepNum: 4, isMvp: false, type: 'session', typeLabel: '1-on-1 Session', shortBanner: '1-ON-1 CV & ESSAY REVIEW', title: '1-on-1 CV Review, Scholarship & Mock Interview', price: 100000, soldVerified: 19, rating: '4,99', modulesCount: 'Privat 60 Menit', webinarTitle: 'Mentoring Personal FUTURE READY', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Bedah langsung CV, esai beasiswa, dan simulasi wawancara bersama Future Ready Lead.', owned: false },
+        { id: 'p4_tk3', spaceId: 4, stepNum: 3, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'STAR INTERVIEW PREP KIT', title: 'Interview Preparation Kit & Personal Branding', price: 9000, soldVerified: 77, rating: '4,90', modulesCount: '50 Panduan Metode STAR', webinarTitle: 'Interview Skills & Personal Branding 101', webinarSchedule: 'Target 100 Pembeli • Grup WA Future Ready Aktif', previewText: 'Panduan menjawab wawancara metode STAR dan buku kerja personal branding mahasiswa.', owned: false },
+        { id: 'p4_ss', spaceId: 4, stepNum: 4, isMvp: false, type: 'session', typeLabel: 'Mentoring Privat', shortBanner: 'MENTORING CV & ESSAY', title: 'Mentoring Privat CV Review, Scholarship & Mock Interview', price: 100000, soldVerified: 19, rating: '4,99', modulesCount: 'Privat 60 Menit', webinarTitle: 'Mentoring Personal FUTURE READY', webinarSchedule: 'Jadwal Privat Opsional Sesuai Pilihan', previewText: 'Bedah langsung CV, esai beasiswa, dan simulasi wawancara bersama Future Ready Lead.', owned: false },
 
         // 05. CREATE
         { id: 'p5_tk', spaceId: 5, stepNum: 1, isMvp: true, type: 'toolkit', typeLabel: 'Growth Toolkit', shortBanner: 'CANVA & SOCIAL MEDIA KIT', title: 'Canva Template & Social Media Creative Kit', price: 5000, soldVerified: 84, rating: '4,92', modulesCount: '25 Template Canva', webinarTitle: 'CREATE WEBINAR: Creative Content Making', webinarSchedule: 'Target 100 Pembeli • Grup WA Create Aktif', previewText: 'Koleksi template desain edukatif Canva siap pakai untuk kampanye dan kreasi konten.', owned: false },
@@ -1409,33 +1484,38 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       toastTimer = setTimeout(() => box.classList.add('hidden'), 3800);
     }
 
-    // Create MySkill-style vertical portrait card HTML
+    // Create MySkill-style vertical portrait card HTML (Supports Custom Product Cover Image & Mentor Photo!)
     function createMySkillProductCardHTML(p, sp) {
       const thumbClass = sp ? sp.thumbClass : 'thumb-space-1';
-      const leadRole = sp ? sp.leadRole : 'AWAREMIND LEAD';
+      const leadRole = p.creatorName || (sp ? sp.leadRole : 'AWAREMIND LEAD');
       const spaceLabel = sp ? sp.name : 'AWAREMIND';
       const isUnlocked = p.soldVerified >= 100;
+      const hasCover = Boolean(p.coverImage);
+      const coverStyle = hasCover
+        ? `background-image: linear-gradient(180deg, rgba(30,21,48,0.45) 0%, rgba(30,21,48,0.88) 100%), url('${p.coverImage}'); background-size: cover; background-position: center;`
+        : '';
 
       return `
         <div class="myskill-product-card flex flex-col justify-between overflow-hidden cursor-pointer group" data-card-id="${p.id}">
-          <!-- Top Thumbnail Banner (~52% proportion like MySkill) -->
-          <div class="${thumbClass} p-4 text-white flex flex-col justify-between min-h-[148px] relative">
-            <div class="flex items-center justify-between gap-1">
-              <span class="px-2 py-0.5 rounded bg-black/25 font-mono text-[9px] font-bold uppercase tracking-wider">
+          <!-- Top Thumbnail Banner (Custom Product Cover / Mentor Photo or AwareMind Gradient) -->
+          <div class="${hasCover ? '' : thumbClass} p-4 text-white flex flex-col justify-between min-h-[156px] relative" style="${coverStyle}">
+            <div class="flex items-center justify-between gap-1 relative z-10">
+              <span class="px-2 py-0.5 rounded bg-black/35 backdrop-blur-sm font-mono text-[9px] font-bold uppercase tracking-wider">
                 ${spaceLabel}
               </span>
-              <span class="px-2 py-0.5 rounded bg-white/20 font-mono text-[9px] font-bold">
+              <span class="px-2 py-0.5 rounded bg-white/20 backdrop-blur-sm font-mono text-[9px] font-bold">
                 ${p.typeLabel}
               </span>
             </div>
 
-            <div class="my-2">
-              <div class="font-extrabold text-sm sm:text-base leading-snug tracking-tight group-hover:text-cta-500 transition-colors">
+            <div class="my-2 flex items-center justify-between gap-2 relative z-10">
+              <div class="font-extrabold text-sm sm:text-base leading-snug tracking-tight group-hover:text-cta-500 transition-colors drop-shadow-sm">
                 ${p.shortBanner}
               </div>
+              ${p.mentorPhoto ? `<img src="${p.mentorPhoto}" alt="${leadRole}" class="w-11 h-11 rounded-full object-cover border-2 border-white/80 shadow-md shrink-0" />` : ''}
             </div>
 
-            <div class="flex items-center justify-between text-[10px] text-purple-100 border-t border-white/15 pt-2">
+            <div class="flex items-center justify-between text-[10px] text-purple-100 border-t border-white/20 pt-2 relative z-10">
               <span class="font-semibold truncate">${leadRole}</span>
               <span class="font-mono font-bold text-cta-500">${formatRp(p.price)}</span>
             </div>
@@ -1481,7 +1561,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
     }
 
     function switchMainTab(targetId) {
-      ['view-home', 'view-catalog', 'view-journal', 'view-community', 'view-ecosystem', 'view-library', 'view-seller-admin'].forEach(id => {
+      ['view-home', 'view-journal', 'view-community', 'view-library', 'view-seller-admin'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('hidden', id !== targetId);
       });
@@ -1536,23 +1616,39 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
 
       document.getElementById('badge-library-count').textContent = String(state.products.filter(p => p.owned).length);
       document.getElementById('referral-total-count').textContent = `${state.referralStatsCount} Transaksi Sah`;
-      document.getElementById('fin-gross').textContent = formatRp(state.financials.gross);
-      document.getElementById('fin-discount').textContent = '-' + formatRp(state.financials.discountTotal);
-      document.getElementById('fin-net').textContent = formatRp(state.financials.net);
+
     }
 
     function renderHomeSpaces() {
       const grid = document.getElementById('home-spaces-grid');
       const detail = document.getElementById('home-space-detail');
-      const rowsContainer = document.getElementById('myskill-learning-path-rows');
       if (!grid || !detail) return;
 
+      const allBtn = document.createElement('button');
+      allBtn.type = 'button';
+      const isAll = state.selectedSpaceId === 0;
+      allBtn.className = `space-node p-3 rounded-xl border text-left ${
+        isAll ? 'bg-aware-800 border-aware-800 text-white shadow-sm' : 'bg-white border-aware-200 hover:border-aware-600 text-aware-950'
+      }`;
+      allBtn.innerHTML = `
+        <div class="text-[10px] font-mono uppercase ${isAll ? 'text-cta-500' : 'text-aware-700'} font-bold">SEMUA KATEGORI</div>
+        <div class="font-extrabold text-xs sm:text-sm mt-0.5">Semua 5 Ruang</div>
+        <div class="text-[11px] mt-0.5 truncate ${isAll ? 'text-purple-100' : 'text-slate-500'}">Tampilkan lengkap</div>
+      `;
+      allBtn.addEventListener('click', () => {
+        state.selectedSpaceId = 0;
+        renderHomeSpaces();
+        renderCatalog();
+      });
+
       grid.innerHTML = '';
+      grid.appendChild(allBtn);
+
       state.spaces.forEach(sp => {
         const active = sp.id === state.selectedSpaceId;
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = `space-node p-3.5 rounded-xl border text-left ${
+        btn.className = `space-node p-3 rounded-xl border text-left ${
           active
             ? 'bg-aware-800 border-aware-800 text-white shadow-sm'
             : 'bg-white border-aware-200 hover:border-aware-600 text-aware-950'
@@ -1565,94 +1661,29 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         btn.addEventListener('click', () => {
           state.selectedSpaceId = sp.id;
           renderHomeSpaces();
+          renderCatalog();
         });
         grid.appendChild(btn);
       });
 
-      const sp = state.spaces.find(s => s.id === state.selectedSpaceId) || state.spaces[0];
-
-      detail.innerHTML = `
-        <div class="flex flex-wrap items-start justify-between gap-3 border-b border-aware-100 pb-4">
-          <div class="space-y-1 max-w-2xl">
-            <span class="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-md border font-bold ${sp.badgeColor}">${sp.sub} • ${sp.leadRole}</span>
-            <h3 class="text-xl font-extrabold text-aware-950 pt-1">${sp.name}</h3>
-            <p class="text-xs text-slate-600">${sp.desc}</p>
-          </div>
-          <button type="button" id="btn-jump-space-catalog" class="px-4 py-2 rounded-xl bg-aware-800 hover:bg-aware-900 text-white text-xs font-bold shadow-sm">
-            Lihat Semua Produk Ruang Ini &gt;
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div class="p-3.5 rounded-xl bg-aware-50 border border-aware-200 space-y-1.5">
-            <div class="font-mono text-[10px] uppercase font-bold text-aware-800">1. Growth Toolkit</div>
-            <ul class="space-y-1 text-[11px] text-slate-700">
-              ${sp.allToolkits.map((item, i) => `<li class="flex items-center gap-1.5"><span class="text-aware-800 font-bold">${i < 3 ? '★' : '•'}</span><span class="${i < 3 ? 'font-bold text-aware-950' : ''}">${item}</span></li>`).join('')}
-            </ul>
-          </div>
-          <div class="p-3.5 rounded-xl bg-aware-50 border border-aware-200 space-y-1.5">
-            <div class="font-mono text-[10px] uppercase font-bold text-aware-800">2. Growth Class</div>
-            <ul class="space-y-1 text-[11px] text-slate-700">
-              ${sp.allClasses.map(item => `<li class="flex items-center gap-1.5"><span class="text-aware-800 font-bold">•</span><span>${item}</span></li>`).join('')}
-            </ul>
-          </div>
-          <div class="p-3.5 rounded-xl bg-aware-50 border border-aware-200 space-y-1.5">
-            <div class="font-mono text-[10px] uppercase font-bold text-aware-800">3. Growth Session (1-on-1)</div>
-            <ul class="space-y-1 text-[11px] text-slate-700">
-              ${sp.allSessions.map(item => `<li class="flex items-center gap-1.5"><span class="text-aware-800 font-bold">•</span><span>${item}</span></li>`).join('')}
-            </ul>
-          </div>
-          <div class="p-3.5 rounded-xl bg-aware-50 border border-aware-200 space-y-1.5">
-            <div class="font-mono text-[10px] uppercase font-bold text-aware-800">4. Fitur Website</div>
-            <ul class="space-y-1 text-[11px] text-slate-700">
-              ${sp.webFeatures.map(item => `<li class="flex items-center gap-1.5"><span class="text-aware-800 font-bold">✓</span><span>${item}</span></li>`).join('')}
-            </ul>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('btn-jump-space-catalog')?.addEventListener('click', () => {
-        document.getElementById('filter-space').value = String(sp.id);
-        renderCatalog();
-        switchMainTab('view-catalog');
-      });
-
-      // Render MySkill-style Topic Rows for all 5 Spaces
-      if (rowsContainer) {
-        rowsContainer.innerHTML = state.spaces.map(spaceItem => {
-          const spProds = state.products.filter(p => p.spaceId === spaceItem.id && p.id !== 'pro_pass');
-          return `
-            <div class="space-y-4">
-              <!-- MySkill Section Header: Bold Title Left + Horizontal Line Middle + "Selengkapnya >" Button Right -->
-              <div class="flex items-center gap-4">
-                <div class="shrink-0">
-                  <h3 class="text-base sm:text-lg font-extrabold text-aware-950">${spaceItem.name} — ${spaceItem.sub}</h3>
-                </div>
-                <div class="flex-1 h-[2px] bg-aware-200 hidden sm:block"></div>
-                <button type="button" class="btn-row-more shrink-0 px-3.5 py-1.5 rounded-lg bg-aware-800 hover:bg-aware-900 text-white text-xs font-bold transition-all" data-space="${spaceItem.id}">
-                  Selengkapnya &gt;
-                </button>
-              </div>
-
-              <!-- Row of Portrait Cards -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                ${spProds.map(p => createMySkillProductCardHTML(p, spaceItem)).join('')}
-              </div>
+      const sp = state.spaces.find(s => s.id === state.selectedSpaceId);
+      if (!sp) {
+        detail.classList.add('hidden');
+      } else {
+        detail.classList.remove('hidden');
+        detail.innerHTML = `
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="space-y-0.5 max-w-2xl">
+              <div class="text-[10px] font-mono uppercase font-bold text-aware-700">${sp.sub} · ${sp.leadRole}</div>
+              <h3 class="text-lg font-extrabold text-aware-950">${sp.name}</h3>
+              <p class="text-xs text-slate-600">${sp.desc}</p>
             </div>
-          `;
-        }).join('');
-
-        rowsContainer.querySelectorAll('.btn-row-more').forEach(btn => {
-          btn.addEventListener('click', () => {
-            document.getElementById('filter-space').value = btn.getAttribute('data-space');
-            renderCatalog();
-            switchMainTab('view-catalog');
-          });
-        });
-
-        rowsContainer.querySelectorAll('[data-card-id]').forEach(card => {
-          card.addEventListener('click', () => openPreviewModal(card.getAttribute('data-card-id')));
-        });
+            <div class="flex flex-wrap gap-1.5 text-[11px]">
+              <span class="px-2.5 py-1 rounded-lg bg-aware-50 border border-aware-200 font-semibold text-aware-900">Toolkit: ${sp.allToolkits.slice(0, 3).join(', ')}</span>
+              <span class="px-2.5 py-1 rounded-lg bg-aware-50 border border-aware-200 font-semibold text-aware-900">Kelas &amp; Mentoring Privat</span>
+            </div>
+          </div>
+        `;
       }
     }
 
@@ -1742,7 +1773,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
     function renderCatalog() {
       const grid = document.getElementById('catalog-products-grid');
       if (!grid) return;
-      const spFilter = document.getElementById('filter-space')?.value || 'ALL';
+      const spFilter = state.selectedSpaceId === 0 ? 'ALL' : String(state.selectedSpaceId);
       const typeFilter = document.getElementById('filter-type')?.value || 'ALL';
 
       const list = state.products.filter(p => {
@@ -1841,19 +1872,30 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       const container = document.getElementById('library-items-container');
       if (!container) return;
       const owned = state.products.filter(p => p.owned);
+      if (owned.length === 0) {
+        container.innerHTML = `<div class="p-6 rounded-xl bg-aware-50 border border-aware-200 text-center text-xs text-slate-500">Belum ada produk di Library. Silakan pilih produk di tab Explore Ruang.</div>`;
+        return;
+      }
       container.innerHTML = owned.map(p => {
         const unlockedWebinar = p.soldVerified >= 100;
+        const fileUrl = p.assetUrl || 'https://drive.google.com/drive/folders/awaremind-toolkit';
+        const waUrl = p.waUrl || 'https://chat.whatsapp.com/awaremind-space';
         return `
-          <div class="p-4 rounded-xl border border-aware-200 bg-canvas space-y-2.5">
+          <div class="p-4 rounded-xl border border-aware-200 bg-canvas space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-aware-100 text-aware-800">${p.typeLabel}</span>
-              <span class="text-[10px] font-mono text-aware-800 font-bold">✓ Watermark &amp; Akses Penuh</span>
+              <span class="text-[10px] font-mono text-aware-800 font-bold">✓ Lunas &amp; Akses Aktif</span>
             </div>
             <div class="font-bold text-base text-aware-950">${p.title}</div>
             <p class="text-xs text-slate-600">${p.previewText}</p>
-            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-aware-200/60 text-[11px]">
-              <span class="font-semibold text-aware-800">Grup WhatsApp Komunitas Tema Aktif</span>
-              <span class="font-mono text-slate-500">Progress Webinar: ${p.soldVerified}/100</span>
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-aware-200/60">
+              <a href="${fileUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-lg bg-aware-800 hover:bg-aware-900 text-white text-xs font-bold">
+                Buka / Unduh Materi →
+              </a>
+              <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-lg bg-white border border-aware-300 hover:bg-aware-50 text-aware-900 text-xs font-bold">
+                Grup WhatsApp Tema
+              </a>
+              <span class="ml-auto font-mono text-[10px] text-slate-500">Webinar: ${p.soldVerified}/100</span>
             </div>
             ${
               unlockedWebinar
@@ -1958,6 +2000,96 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         }
       }
 
+      const ordersBox = document.getElementById('admin-orders-queue');
+      if (ordersBox) {
+        if (!state.buyerOrders || state.buyerOrders.length === 0) {
+          ordersBox.innerHTML = `<div class="p-4 rounded-xl bg-aware-50 text-center text-xs text-slate-500">Belum ada pesanan baru.</div>`;
+        } else {
+          ordersBox.innerHTML = state.buyerOrders.map(ord => {
+            const isPaid = ord.status === 'paid';
+            const fee10 = Math.round(ord.finalPaid * 0.10);
+            const net90 = ord.finalPaid - fee10;
+            return `
+              <div class="p-3.5 rounded-xl border ${isPaid ? 'border-aware-200 bg-white' : 'border-cta-500 bg-aware-50/70'} flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-mono font-bold text-[10px] px-2 py-0.5 rounded ${isPaid ? 'bg-aware-100 text-aware-800' : 'bg-cta-500 text-aware-950'}">${isPaid ? 'LUNAS' : 'MENUNGGU VERIFIKASI QRIS'}</span>
+                    <span class="font-bold text-aware-950">${ord.buyerName}</span>
+                    <span class="font-mono text-[10px] text-slate-500">(${ord.buyerWa})</span>
+                  </div>
+                  <div class="font-semibold text-slate-700">${ord.productTitle}</div>
+                  <div class="font-mono text-[10px] text-slate-500">Total: <strong>${formatRp(ord.finalPaid)}</strong> · Web 10%: ${formatRp(fee10)} · Penjual 90%: ${formatRp(net90)} ${ord.referralUsed ? `· Ref: ${ord.referralUsed}` : ''}</div>
+                </div>
+                <div>
+                  ${
+                    isPaid
+                      ? `<span class="text-[11px] font-bold text-aware-800">✓ Akses Terbuka</span>`
+                      : `<button type="button" class="btn-verify-order px-3.5 py-1.5 rounded-lg bg-aware-800 hover:bg-aware-900 text-white font-bold text-xs shadow-sm" data-ord="${ord.orderId}">✓ Verifikasi Lunas</button>`
+                  }
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          ordersBox.querySelectorAll('.btn-verify-order').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const oid = btn.getAttribute('data-ord');
+              const ord = state.buyerOrders.find(x => x.orderId === oid);
+              if (!ord || ord.status === 'paid') return;
+              ord.status = 'paid';
+              const prod = state.products.find(p => p.id === ord.productId);
+              if (prod) {
+                prod.owned = true;
+                prod.soldVerified += 1;
+              }
+              state.financials.gross += ord.finalPaid;
+              saveStateToLocal();
+              renderHeaderAndTier();
+              renderHomeSpaces();
+              renderCatalog();
+              renderGrowthTogether();
+              renderLibrary();
+              renderSellerAdminPortal();
+              showToast(`Pembayaran ${ord.buyerName} diverifikasi lunas! Produk terbuka di Library.`);
+            });
+          });
+        }
+      }
+
+      const activeProdCountEl = document.getElementById('admin-active-catalog-list');
+      const countBadgeEl = document.getElementById('admin-active-prod-count');
+      if (countBadgeEl) countBadgeEl.textContent = String(state.products.length);
+      if (activeProdCountEl) {
+        activeProdCountEl.innerHTML = state.products.map(p => {
+          const sp = state.spaces.find(s => s.id === p.spaceId);
+          return `
+            <div class="p-2.5 rounded-lg border border-aware-100 bg-canvas flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <div class="font-bold text-aware-950 truncate">${p.title}</div>
+                <div class="text-[10px] font-mono text-slate-500">${sp ? sp.name : ''} · ${p.typeLabel} · ${formatRp(p.price)}</div>
+              </div>
+              <button type="button" class="btn-delete-prod px-2.5 py-1 rounded border border-rose-200 text-rose-600 hover:bg-rose-50 font-bold text-[11px] shrink-0" data-id="${p.id}">
+                Hapus
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        activeProdCountEl.querySelectorAll('.btn-delete-prod').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const pid = btn.getAttribute('data-id');
+            state.products = state.products.filter(p => p.id !== pid);
+            saveStateToLocal();
+            renderHomeSpaces();
+            renderCatalog();
+            renderGrowthTogether();
+            renderLibrary();
+            renderSellerAdminPortal();
+            showToast('Produk dihapus dari katalog etalase.');
+          });
+        });
+      }
+
       const ledgerBody = document.getElementById('admin-payout-ledger-body');
       if (ledgerBody) {
         ledgerBody.innerHTML = state.creatorLedger.map(row => {
@@ -1993,15 +2125,31 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         typeLabel: item.typeLabel,
         shortBanner: item.shortBanner,
         title: item.title,
+        creatorName: item.creatorName,
+        coverImage: item.coverImage || '',
         price: item.price,
         soldVerified: 1,
         rating: '5,00',
         modulesCount: item.modulesCount,
         webinarTitle: `Komunitas & Webinar: ${item.title}`,
         webinarSchedule: 'Target 100 Pembeli • Grup WA Aktif',
+        assetUrl: item.assetUrl || 'https://drive.google.com/drive/folders/awaremind-toolkit',
+        waUrl: item.waUrl || 'https://chat.whatsapp.com/awaremind-space',
         previewText: `${item.previewText} (Kontributor: ${item.creatorName})`,
         owned: false
       };
+      syncSupabaseInsert('creator_products', {
+        id: newProd.id,
+        creator_name: item.creatorName,
+        space_id: item.spaceId,
+        service_type: item.type,
+        title: item.title,
+        price_idr: item.price,
+        cover_image_url: item.coverImage || null,
+        asset_url: item.assetUrl,
+        preview_text: item.previewText,
+        approval_status: 'approved'
+      });
       state.products.push(newProd);
       state.creatorLedger.unshift({
         creator: item.creatorName,
@@ -2009,6 +2157,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         itemTitle: item.title,
         grossSales: item.price
       });
+      saveStateToLocal();
       renderHomeSpaces();
       renderCatalog();
       renderGrowthTogether();
@@ -2085,7 +2234,75 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       document.getElementById('checkout-final-price').textContent = formatRp(base - discount);
     }
 
+    let supaClient = null;
+    let uploadedCoverDataUrl = '';
+
+    const defaultProductsBackup = JSON.parse(JSON.stringify(state.products));
+
+    function saveStateToLocal() {
+      try {
+        localStorage.setItem('awaremind_saved_products_v1', JSON.stringify(state.products));
+        localStorage.setItem('awaremind_saved_orders_v1', JSON.stringify(state.buyerOrders));
+        localStorage.setItem('awaremind_saved_pending_v1', JSON.stringify(state.pendingSubmissions));
+        if (state.customQrisImage) localStorage.setItem('awaremind_custom_qris_v1', state.customQrisImage);
+      } catch (e) {}
+    }
+
+    function loadStateFromLocal() {
+      try {
+        const savedProds = localStorage.getItem('awaremind_saved_products_v1');
+        if (savedProds) {
+          const parsed = JSON.parse(savedProds);
+          if (Array.isArray(parsed) && parsed.length > 0) state.products = parsed;
+        }
+        const savedOrders = localStorage.getItem('awaremind_saved_orders_v1');
+        if (savedOrders) {
+          const parsedO = JSON.parse(savedOrders);
+          if (Array.isArray(parsedO)) state.buyerOrders = parsedO;
+        }
+        const savedPend = localStorage.getItem('awaremind_saved_pending_v1');
+        if (savedPend) {
+          const parsedP = JSON.parse(savedPend);
+          if (Array.isArray(parsedP)) state.pendingSubmissions = parsedP;
+        }
+        const savedQris = localStorage.getItem('awaremind_custom_qris_v1');
+        if (savedQris) {
+          state.customQrisImage = savedQris;
+          const qBox = document.getElementById('checkout-qris-box');
+          if (qBox) qBox.innerHTML = `<img src="${savedQris}" alt="QRIS AwareMind" class="w-full h-full object-contain" />`;
+        }
+      } catch (e) {}
+    }
+
+    function initSupabaseFromStorage() {
+      loadStateFromLocal();
+      try {
+        const url = localStorage.getItem('awaremind_supa_url') || '';
+        const key = localStorage.getItem('awaremind_supa_key') || '';
+        const urlInput = document.getElementById('input-supa-url');
+        const keyInput = document.getElementById('input-supa-key');
+        if (urlInput && url) urlInput.value = url;
+        if (keyInput && key) keyInput.value = key;
+        if (url && key && window.supabase && typeof window.supabase.createClient === 'function') {
+          supaClient = window.supabase.createClient(url, key);
+          const badge = document.getElementById('supabase-live-status');
+          if (badge) {
+            badge.textContent = '✓ Terhubung ke Supabase Live';
+            badge.className = 'px-2.5 py-1 rounded-full bg-aware-800 text-white font-mono text-[10px] font-bold';
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function syncSupabaseInsert(table, payload) {
+      if (!supaClient) return;
+      try {
+        await supaClient.from(table).insert([payload]);
+      } catch (e) {}
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      initSupabaseFromStorage();
       renderHeaderAndTier();
       renderHomeSpaces();
       renderJournalHistory();
@@ -2118,7 +2335,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       });
 
       document.getElementById('hero-btn-journal')?.addEventListener('click', () => switchMainTab('view-journal'));
-      document.getElementById('hero-btn-explore')?.addEventListener('click', () => switchMainTab('view-catalog'));
+      document.getElementById('hero-btn-explore')?.addEventListener('click', () => { document.getElementById('explore-storefront-anchor')?.scrollIntoView({ behavior: 'smooth' }); });
       document.getElementById('hero-btn-ecosystem')?.addEventListener('click', () => switchMainTab('view-community'));
 
       document.getElementById('btn-switch-tier-demo')?.addEventListener('click', () => {
@@ -2131,7 +2348,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       ['btn-header-upgrade', 'btn-journal-upgrade', 'btn-overlay-upgrade'].forEach(id => {
         document.getElementById(id)?.addEventListener('click', () => openCheckoutModal('pro_pass'));
       });
-      document.getElementById('btn-overlay-catalog')?.addEventListener('click', () => switchMainTab('view-catalog'));
+      document.getElementById('btn-overlay-catalog')?.addEventListener('click', () => { switchMainTab('view-home'); document.getElementById('explore-storefront-anchor')?.scrollIntoView({ behavior: 'smooth' }); });
 
       document.querySelectorAll('.mood-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -2180,7 +2397,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         showToast('Laporan pola suasana hati & riwayat jurnal siap diunduh!');
       });
 
-      document.getElementById('filter-space')?.addEventListener('change', renderCatalog);
+
       document.getElementById('filter-type')?.addEventListener('change', renderCatalog);
       document.getElementById('ref-search-input')?.addEventListener('input', renderReferralDirectory);
       document.getElementById('ref-team-filter')?.addEventListener('change', renderReferralDirectory);
@@ -2228,6 +2445,55 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
       document.getElementById('btn-close-checkout')?.addEventListener('click', closeCheckout);
       document.getElementById('btn-cancel-checkout')?.addEventListener('click', closeCheckout);
 
+      let checkoutProofUploaded = false;
+      document.getElementById('checkout-proof-file')?.addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        checkoutProofUploaded = Boolean(f);
+        const st = document.getElementById('checkout-proof-status');
+        if (st && f) {
+          st.textContent = `✓ Bukti bayar "${f.name}" siap dikirim ke Admin & membuka akses.`;
+          st.className = 'text-[10px] text-aware-800 font-bold mt-1';
+        }
+      });
+
+      document.getElementById('admin-qris-upload')?.addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = (ev) => {
+          state.customQrisImage = ev.target.result || '';
+          saveStateToLocal();
+          const qBox = document.getElementById('checkout-qris-box');
+          if (qBox && state.customQrisImage) {
+            qBox.innerHTML = `<img src="${state.customQrisImage}" alt="QRIS AwareMind" class="w-full h-full object-contain" />`;
+          }
+          showToast('Gambar QRIS resmi AwareMind berhasil diperbarui!');
+        };
+        r.readAsDataURL(f);
+      });
+
+      document.getElementById('btn-clear-sample-products')?.addEventListener('click', () => {
+        state.products = [];
+        saveStateToLocal();
+        renderHomeSpaces();
+        renderCatalog();
+        renderGrowthTogether();
+        renderLibrary();
+        renderSellerAdminPortal();
+        showToast('Katalog contoh dikosongkan! Silakan upload produk asli tim di formulir kiri.');
+      });
+
+      document.getElementById('btn-restore-default-products')?.addEventListener('click', () => {
+        state.products = JSON.parse(JSON.stringify(defaultProductsBackup));
+        saveStateToLocal();
+        renderHomeSpaces();
+        renderCatalog();
+        renderGrowthTogether();
+        renderLibrary();
+        renderSellerAdminPortal();
+        showToast('15 Produk MVP bawaan berhasil dikembalikan!');
+      });
+
       document.getElementById('btn-confirm-checkout')?.addEventListener('click', () => {
         const prod = state.activeCheckoutProduct;
         if (!prod) return;
@@ -2235,6 +2501,7 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         const discount = state.appliedReferral ? Math.round(base * 0.05) : 0;
         const finalAmount = base - discount;
         const qrisFee = Math.round(finalAmount * 0.007);
+        const buyerWa = document.getElementById('checkout-buyer-wa')?.value.trim() || '081200000000';
         prod.owned = true;
         prod.soldVerified += 1;
         state.user.planTier = 'pro';
@@ -2242,6 +2509,26 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         state.financials.discountTotal += discount;
         state.financials.net += (finalAmount - qrisFee);
         if (state.appliedReferral) state.referralStatsCount += 1;
+        state.buyerOrders.unshift({
+          orderId: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+          buyerName: state.user.name,
+          buyerWa,
+          productId: prod.id,
+          productTitle: prod.title,
+          referralUsed: state.appliedReferral || '',
+          finalPaid: finalAmount,
+          status: 'paid',
+          proofUploaded: checkoutProofUploaded,
+          createdAt: 'Baru Saja'
+        });
+        syncSupabaseInsert('orders', {
+          product_id: prod.id,
+          referral_used: state.appliedReferral || null,
+          discount_idr: discount,
+          final_paid_idr: finalAmount,
+          status: 'paid'
+        });
+        saveStateToLocal();
         closeCheckout();
         renderHeaderAndTier();
         renderHomeSpaces();
@@ -2255,10 +2542,40 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         renderGrowthJourneyChart();
         const fee10 = Math.round(finalAmount * 0.10);
         const creator90 = finalAmount - fee10;
-        showToast(`Transaksi berhasil! Bagi hasil otomatis: ${formatRp(creator90)} (90% Penjual) & ${formatRp(fee10)} (10% Kas Web).`);
+        showToast(`Pembayaran terkonfirmasi! Produk terbuka di Library Saya (90% Penjual: ${formatRp(creator90)} | 10% Web: ${formatRp(fee10)}).`);
       });
 
       document.getElementById('upload-price')?.addEventListener('input', updateUploadFeeCalculator);
+
+      document.getElementById('upload-cover-file')?.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          uploadedCoverDataUrl = ev.target.result || '';
+          const wrap = document.getElementById('upload-cover-preview-wrap');
+          const img = document.getElementById('upload-cover-preview-img');
+          if (wrap && img && uploadedCoverDataUrl) {
+            img.src = uploadedCoverDataUrl;
+            wrap.classList.remove('hidden');
+            wrap.classList.add('flex');
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById('form-supabase-connect')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = (document.getElementById('input-supa-url')?.value || '').trim();
+        const key = (document.getElementById('input-supa-key')?.value || '').trim();
+        if (!url || !key) return;
+        try {
+          localStorage.setItem('awaremind_supa_url', url);
+          localStorage.setItem('awaremind_supa_key', key);
+        } catch (err) {}
+        initSupabaseFromStorage();
+        showToast('Kredensial Supabase disimpan! Sinkronisasi database aktif.');
+      });
 
       document.getElementById('form-creator-upload')?.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -2270,15 +2587,19 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
         const creatorName = document.getElementById('upload-creator-name').value.trim() || 'AwareMind Lead';
         const spaceId = Number(document.getElementById('upload-space-id').value) || 1;
         const type = document.getElementById('upload-service-type').value || 'toolkit';
-        const typeMap = { toolkit: 'Growth Toolkit', class: 'Growth Class', session: '1-on-1 Session' };
+        const typeMap = { toolkit: 'Growth Toolkit', class: 'Growth Class', session: 'Mentoring Privat' };
         const title = document.getElementById('upload-title').value.trim();
         const price = Math.max(5000, Number(document.getElementById('upload-price').value) || 10000);
         const modulesCount = document.getElementById('upload-modules-info').value.trim() || 'Toolkit Digital';
         const assetUrl = document.getElementById('upload-file-url').value.trim() || 'https://drive.google.com';
+        const waUrl = document.getElementById('upload-wa-url')?.value.trim() || 'https://chat.whatsapp.com/awaremind-space';
         const previewText = document.getElementById('upload-preview-desc').value.trim();
         const instantApprove = document.getElementById('upload-instant-approve')?.checked;
 
         if (!title || !previewText) return;
+
+        const coverUrlInput = (document.getElementById('upload-cover-url')?.value || '').trim();
+        const coverImage = uploadedCoverDataUrl || coverUrlInput || '';
 
         const newSub = {
           id: 'pend_' + Date.now(),
@@ -2289,11 +2610,16 @@ CREATE POLICY "Private user journals" ON public.daily_journals FOR ALL USING (au
           shortBanner: title.toUpperCase().slice(0, 26),
           title,
           price,
+          coverImage,
           modulesCount,
           assetUrl,
+          waUrl,
           previewText,
           submittedAt: 'Baru Saja'
         };
+        uploadedCoverDataUrl = '';
+        const wrap = document.getElementById('upload-cover-preview-wrap');
+        if (wrap) { wrap.classList.add('hidden'); wrap.classList.remove('flex'); }
 
         state.pendingSubmissions.unshift(newSub);
         document.getElementById('upload-title').value = '';
