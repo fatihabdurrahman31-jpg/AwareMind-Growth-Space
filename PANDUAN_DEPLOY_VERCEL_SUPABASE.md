@@ -1,25 +1,28 @@
-# Panduan Deploy AwareMind Growth Space (Vercel + Supabase + Email Otomatis)
+# Panduan Deploy Full-Stack AwareMind Growth Space (Vercel + Supabase + Midtrans QRIS + Email Otomatis)
 
-Paket ini **100% tanpa n8n** (nol risiko blokir WhatsApp), gratis untuk tahap awal 0–100+ pembeli, dan sudah mendukung **Login Otomatis Google / Magic Link Email**, **Upload File Produk di `/admin`**, **Verifikasi QRIS/DANA**, **Email Akses Produk**, dan **Tombol Gabung Grup WA Pembeli**.
+Paket ini **100% final, tanpa n8n** (nol risiko blokir WhatsApp), dan sudah mencakup **2 mode pembayaran sekaligus**:
+- **Mode Langsung Jalan Hari Ini:** QRIS Statis / DANA + ACC 1 klik di `/admin.html`.
+- **Mode 100% Otomatis 24 Jam (Midtrans QRIS):** Begitu akun Midtrans disetujui, cukup isi `MIDTRANS_SERVER_KEY` di Vercel — sistem otomatis cek lunas (SHA-512), buka Library, naikkan Milestone `0/100`, dan kirim email + Link Grup WA.
 
-## Isi Paket
-1. `index.html` — Website responsif Desktop & HP (HD Mindy + 6 Ruang + Jurnal & Level 1–3 + Checkout + Tombol Grup WA).
-2. `admin.html` — Panel Admin tim (`/admin`) untuk ACC bukti transfer 1 klik, upload PDF/link Canva/Notion/Sheets, dan ubah Link Grup WA.
-3. `supabase_schema.sql` — Skema 7 tabel database + Row Level Security + Storage Buckets + penghitung Milestone `0/100`.
-4. `api/send-access-email.js` — Fungsi serverless Vercel + Resend untuk kirim email `"AKSES PRODUK KAMU DI SINI"` + Link Grup WA otomatis.
+## Daftar File Lengkap dalam Paket
+1. `index.html` — Storefront responsif Desktop & HP dengan 12/12 banner produk HD, banner bundling Mindy, kartu Level 1–3 HD, login Google/Magic Link, dan redirect Portal HealMind.
+2. `admin.html` — Panel Admin tim (`/admin.html`) untuk upload/edit produk, ACC transfer 1 klik, dan atur Link Grup WA.
+3. `supabase_schema.sql` — Skema 7 tabel + RLS keamanan ketat (role/premium terkunci, Link Grup WA hanya untuk pembeli lunas) + Storage Buckets + Milestone `0/100`.
+4. `api/send-access-email.js` — Pengirim email otomatis `"AKSES PRODUK KAMU DI SINI"` + tombol `"Gabung Grup WA Pembeli"` (Resend gratis 3.000 email/bulan).
+5. `api/create-qris.js` — Generator QRIS Midtrans khusus QRIS (~0,7% fee, tanpa VA Rp4.000).
+6. `api/midtrans-webhook.js` — Penerima status LUNAS otomatis dari Midtrans (verifikasi SHA-512 anti-hack).
 
-## Langkah Deploy (10 Menit)
-1. **Setup Supabase (Database & Login Email/Google):**
-   - Buka proyek Supabase → masuk menu **SQL Editor** → paste seluruh isi `supabase_schema.sql` → klik **Run**.
-   - Masuk **Authentication → Providers** → aktifkan **Email (Magic Link)** dan **Google** (masukkan Client ID/Secret dari Google Cloud Console).
-   - Setelah Fatih & Sofi login pertama kali, jalankan perintah SQL di baris paling bawah `supabase_schema.sql` untuk menjadikan email kalian berstatus `admin`.
-2. **Setup Email Otomatis Gratis (Resend):**
-   - Daftar gratis di [resend.com](https://resend.com) (kuota 3.000 email/bulan gratis) → buat **API Key**.
-3. **Upload ke GitHub & Deploy di Vercel:**
-   - Upload seluruh isi folder ini ke repositori GitHub proyek `awaremind-growthspace`.
-   - Di Vercel → **Project Settings → Environment Variables**, tambahkan:
-     - `RESEND_API_KEY` = API key Resend kamu
-     - `NEXT_PUBLIC_SITE_URL` = `https://awaremind-growthspace.vercel.app`
-   - Masukkan `SUPABASE_URL` dan `SUPABASE_ANON_KEY` pada bagian konfigurasi di `index.html` dan `admin.html`, lalu klik **Deploy**.
-4. **Isi Link Grup WA Pembeli:**
-   - Buka `https://awaremind-growthspace.vercel.app/admin.html` → Tab **Link Grup WA & QRIS** → tempel link undangan Grup WA resmi AwareMind → Simpan.
+## Environment Variables di Vercel (Settings -> Environment Variables)
+| Variabel | Sumber | Wajib Saat Awal? |
+| :--- | :--- | :---: |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API | Ya |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Project Settings → API | Ya |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API (Secret) | Ya (untuk Webhook Midtrans) |
+| `RESEND_API_KEY` | [resend.com](https://resend.com) → API Keys | Ya |
+| `NEXT_PUBLIC_SITE_URL` | `https://awaremind-growthspace.vercel.app` | Ya |
+| `MIDTRANS_SERVER_KEY` | Midtrans Dashboard → Settings → Access Keys | Setelah Midtrans disetujui |
+| `MIDTRANS_IS_PRODUCTION` | `false` (Sandbox) atau `true` (Live) | Setelah Midtrans disetujui |
+
+## Pengaturan Webhook di Midtrans Dashboard
+Masuk ke **Midtrans Dashboard → Settings → Configuration → Payment Notification URL**, lalu isi:
+`https://awaremind-growthspace.vercel.app/api/midtrans-webhook`

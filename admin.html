@@ -239,8 +239,8 @@
 
   <script>
     // Isi dengan Project URL & Anon Key Supabase saat deploy ke Vercel
-    const SUPABASE_URL = window.SUPABASE_URL || "https://GANTI_PROJECT_ID.supabase.co";
-    const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "GANTI_ANON_KEY";
+    const SUPABASE_URL = window.SUPABASE_URL || "https://lioiufvcrjgkuqzqxhhb.supabase.co";
+    const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpb2l1ZnZjcmpna3VxenF4aGhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU1MDI3MTEsImV4cCI6MjExMTA3ODcxMX0.APN6bdlF8TC9QZ1lX7pOj_uEOZY6FQH13zPGSzAcOU4";
     const sb = (!SUPABASE_URL.includes("GANTI_") && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
     let demoProducts = [
@@ -345,6 +345,24 @@
       document.getElementById("p-price").value = "8000";
     }
 
+    async function loadLiveAdminData() {
+      if (!sb) return;
+      const { data: prods } = await sb.from("products").select("*").order("created_at", { ascending: false });
+      if (prods && prods.length) demoProducts = prods;
+      const { data: ords } = await sb.from("orders").select("*").order("created_at", { ascending: false });
+      if (ords) demoOrders = ords.map(o => ({ ...o, items: (o.items || []).map(i => i.title || i) }));
+      const { data: mCount } = await sb.rpc("get_milestone_count");
+      if (typeof mCount === "number") milestoneCount = mCount;
+      const { data: sets } = await sb.from("app_settings").select("*");
+      if (sets) {
+        const wa = sets.find(x => x.key === "wa_group_url");
+        const dn = sets.find(x => x.key === "dana_number");
+        if (wa) document.getElementById("set-wa").value = wa.value;
+        if (dn) document.getElementById("set-dana").value = dn.value;
+      }
+      renderProducts(); renderOrders();
+    }
+
     async function saveProduct(e) {
       e.preventDefault();
       const item = {
@@ -356,6 +374,27 @@
         access_url: document.getElementById("p-url").value.trim() || (document.getElementById("p-file").files[0] ? "file://" + document.getElementById("p-file").files[0].name : ""),
         desc: document.getElementById("p-desc").value.trim()
       };
+      if (sb) {
+        let accessUrl = item.access_url;
+        let bannerUrl = "";
+        const fPdf = document.getElementById("p-file").files[0];
+        const fBan = document.getElementById("p-banner").files[0];
+        if (fPdf) {
+          const p = `${Date.now()}_${fPdf.name}`;
+          const { error: e1 } = await sb.storage.from("product-files").upload(p, fPdf);
+          if (!e1) accessUrl = sb.storage.from("product-files").getPublicUrl(p).data.publicUrl;
+        }
+        if (fBan) {
+          const p = `${Date.now()}_${fBan.name}`;
+          const { error: e2 } = await sb.storage.from("product-banners").upload(p, fBan);
+          if (!e2) bannerUrl = sb.storage.from("product-banners").getPublicUrl(p).data.publicUrl;
+        }
+        const payload = { id: item.id, space: item.space, title: item.title, price: item.price, format_label: item.format_label, description: item.desc, access_url: accessUrl };
+        if (bannerUrl) payload.banner_url = bannerUrl;
+        const { error } = await sb.from("products").upsert(payload);
+        if (error) { showToast("Gagal simpan ke Supabase: " + error.message); return; }
+        await loadLiveAdminData(); resetForm(); showToast("Produk tersimpan langsung ke Supabase!"); return;
+      }
       const idx = demoProducts.findIndex(x => x.id === item.id);
       if (idx >= 0) demoProducts[idx] = item; else demoProducts.unshift(item);
       resetForm();
@@ -363,7 +402,12 @@
       showToast(`Produk "${item.title}" berhasil disimpan & tayang!`);
     }
 
-    function deleteProduct(id) {
+    async function deleteProduct(id) {
+      if (sb) {
+        const { error } = await sb.from("products").delete().eq("id", id);
+        if (error) { showToast("Gagal hapus: " + error.message); return; }
+        await loadLiveAdminData(); showToast("Produk dihapus dari Supabase."); return;
+      }
       demoProducts = demoProducts.filter(x => x.id !== id);
       renderProducts();
       showToast("Produk dihapus dari daftar.");
@@ -389,7 +433,30 @@
       updateKPIs();
     }
 
-    function approveOrder(orderId) {
+    async function approveOrder(orderId) {
+      if (sb) {
+        const { data: order } = await sb.from("orders").select("*").eq("id", orderId).single();
+        if (!order) return;
+        await sb.from("orders").update({ status: "paid", paid_at: new Date().toISOString() }).eq("id", orderId);
+        for (const it of (order.items || [])) {
+          if (it.kind === "premium" && order.user_id) {
+            await sb.from("profiles").update({ is_premium: true }).eq("id", order.user_id);
+          } else if (order.user_id) {
+            await sb.from("user_library").upsert({ user_id: order.user_id, product_id: it.id, product_title: it.title, product_meta: it.meta || "", access_url: it.access_url || "" });
+          }
+        }
+        const { data: waRow } = await sb.from("app_settings").select("value").eq("key", "wa_group_url").single();
+        const sess = (await sb.auth.getSession()).data.session;
+        await fetch("/api/send-access-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${sess?.access_token || ""}` },
+          body: JSON.stringify({ buyerEmail: order.buyer_email, buyerName: order.buyer_name, items: order.items || [], waGroupUrl: waRow?.value || "" })
+        });
+        await sb.from("orders").update({ email_sent: true }).eq("id", orderId);
+        await loadLiveAdminData();
+        showToast("Order di-ACC! Library terbuka & email + Link Grup WA terkirim.");
+        return;
+      }
       const o = demoOrders.find(x => x.id === orderId);
       if (!o) return;
       o.status = "paid";
@@ -398,7 +465,14 @@
       showToast(`Order ${orderId} di-ACC! Library terbuka, Milestone naik jadi ${milestoneCount}/100, dan email + Link Grup WA terkirim.`);
     }
 
-    function saveSettings() {
+    async function saveSettings() {
+      if (sb) {
+        const { error } = await sb.from("app_settings").upsert([
+          { key: "wa_group_url", value: document.getElementById("set-wa").value.trim() },
+          { key: "dana_number", value: document.getElementById("set-dana").value.trim() }
+        ]);
+        if (error) { showToast("Gagal simpan pengaturan: " + error.message); return; }
+      }
       document.getElementById("kpi-wa").textContent = "Tersimpan & Aktif";
       showToast("Link Grup WA Pembeli, info DANA, & link HealMind berhasil diperbarui.");
     }
@@ -410,6 +484,7 @@
       }
       renderProducts();
       renderOrders();
+      loadLiveAdminData();
     });
   </script>
 </body>
