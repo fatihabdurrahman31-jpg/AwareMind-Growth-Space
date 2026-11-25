@@ -275,7 +275,8 @@
               <option value="Sheets">Google Sheets / Excel</option>
               <option value="Canva">Canva Template / PPT</option>
             </select>
-<input id="search-input" type="search" name="catalog_search_query" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" oninput="renderCatalog()" placeholder="Cari toolkit, tracker, CV..." class="px-4 py-2 rounded-full bg-white border border-[var(--border-hairline)] text-xs sm:text-sm w-full sm:w-56" />          </div>
+            <input id="search-input" type="search" name="catalog_search_query" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" oninput="renderCatalog()" placeholder="Cari toolkit, tracker, CV..." class="px-4 py-2 rounded-full bg-white border border-[var(--border-hairline)] text-xs sm:text-sm w-full sm:w-56" />
+          </div>
         </div>
 
         <div id="space-tabs" class="flex items-center gap-2 scroll-x-touch no-scrollbar pb-1 w-full"></div>
@@ -549,7 +550,7 @@
           <div id="prev-price" class="font-extrabold text-xl text-[var(--brand-royal)]"></div>
         </div>
         <button type="button" id="prev-add-btn" class="px-5 py-2.5 rounded-full bg-[var(--sky-primary)] text-white font-extrabold text-sm hover:bg-[var(--sky-deep)]">
-          Masukkan Keranjang
+          Beli Sekarang
         </button>
       </div>
     </div>
@@ -1005,9 +1006,10 @@
     }
 
     // AUTH & NAVIGATION
-    function requireAuth(callback) {
+    function requireAuth(callback, preferRegister = false) {
       if (state.user) { callback(); return; }
       state.pendingAction = callback;
+      if (preferRegister) authTabMode = "register";
       openAuthModal();
     }
     let authTabMode = "login";
@@ -1155,36 +1157,46 @@
     function addToCart(id) {
       const p = PRODUCTS.find(x => x.id === id);
       if (!p) return;
-      if (state.cart.some(c => c.id === id)) { showToast("Produk sudah ada di keranjang."); return; }
-      state.cart.push({ id: p.id, title: p.title, meta: p.space + " · " + p.formatLabel, price: p.price, kind: "product" });
-      updateBadges();
-      showToast(`"${p.title}" ditambahkan ke keranjang.`);
+      requireAuth(() => {
+        if (!state.cart.some(c => c.id === id)) {
+          state.cart.push({ id: p.id, title: p.title, meta: p.space + " · " + p.formatLabel, price: p.price, kind: "product", access_url: p.access_url || "" });
+          updateBadges();
+        }
+        openCartModal();
+      }, true);
     }
 
     function addBundlingToCart(id) {
       const b = BUNDLINGS.find(x => x.id === id);
       if (!b) return;
-      if (state.cart.some(c => c.id === id)) { showToast("Paket bundling sudah ada di keranjang."); return; }
-      state.cart.push({ id: b.id, title: b.title, meta: "Paket Bundling 3 Produk", price: b.price, kind: "bundling" });
-      updateBadges();
-      showToast(`"${b.title}" ditambahkan ke keranjang.`);
+      requireAuth(() => {
+        if (!state.cart.some(c => c.id === id)) {
+          state.cart.push({ id: b.id, title: b.title, meta: "Paket Bundling 3 Produk", price: b.price, kind: "bundling" });
+          updateBadges();
+        }
+        openCartModal();
+      }, true);
     }
 
     function addPremiumToCart() {
       if (state.isPremium) { showToast("Akunmu sudah berstatus Premium Lifetime."); closeModal("premium-modal"); return; }
-      if (!state.cart.some(c => c.id === "premium-tier")) {
-        state.cart.push({ id: "premium-tier", title: "Akun Premium AwareMind (Lifetime)", meta: "4 Mode Jurnal, Mood Pixels & Weekly Wrapped", price: 15000, kind: "premium" });
-        updateBadges();
-      }
       closeModal("premium-modal");
-      openCartModal();
+      requireAuth(() => {
+        if (!state.cart.some(c => c.id === "premium-tier")) {
+          state.cart.push({ id: "premium-tier", title: "Akun Premium AwareMind (Lifetime)", meta: "4 Mode Jurnal, Mood Pixels & Weekly Wrapped", price: 15000, kind: "premium" });
+          updateBadges();
+        }
+        openCartModal();
+      }, true);
     }
 
     function addMentoringToCart() {
       const [title, priceStr] = document.getElementById("mentoring-option").value.split("|");
-      state.cart.push({ id: "mentor-" + Date.now(), title, meta: "1-on-1 Mentoring (By Appointment)", price: parseInt(priceStr, 10), kind: "mentoring" });
-      updateBadges();
-      openCartModal();
+      requireAuth(() => {
+        state.cart.push({ id: "mentor-" + Date.now(), title, meta: "1-on-1 Mentoring (By Appointment)", price: parseInt(priceStr, 10), kind: "mentoring" });
+        updateBadges();
+        openCartModal();
+      }, true);
     }
 
     function openCartModal() { renderCartModal(); document.getElementById("cart-modal").classList.remove("hidden"); }
@@ -1534,7 +1546,7 @@
     function submitJournal() {
       const txt = document.getElementById("journal-text").value.trim();
       if (!txt) { showToast("Tuliskan refleksi singkatmu terlebih dahulu."); return; }
-      requireAuth(() => {
+      (() => {
         const space = document.getElementById("journal-space").value;
         const riskWords = ["bunuh diri", "menyakiti diri", "ingin mati", "akhiri hidup"];
         const isRisk = riskWords.some(w => txt.toLowerCase().includes(w));
@@ -1573,8 +1585,9 @@
         document.getElementById("journal-text").value = "";
         updateWordCount();
         renderCheckinView();
-        showToast(isRisk ? "Keselamatanmu adalah prioritas utama." : "Refleksi hari ini tersimpan ke akunmu.");
-      });
+        try { localStorage.setItem("ags_guest_journals", JSON.stringify(state.journals.slice(0, 20))); } catch(e) {}
+        showToast(isRisk ? "Keselamatanmu adalah prioritas utama." : (state.user ? "Refleksi hari ini tersimpan ke akunmu." : "Refleksi tersimpan di perangkat ini (daftar akun untuk sinkron antar perangkat)."));
+      })();
     }
 
     
@@ -1690,6 +1703,7 @@
     }
 
     window.addEventListener("DOMContentLoaded", () => {
+      try { const g = JSON.parse(localStorage.getItem("ags_guest_journals") || "null"); if (Array.isArray(g) && g.length) state.journals = g; } catch(e) {}
       initSupabaseLive();
       switchView("explore");
       renderFeatured();
