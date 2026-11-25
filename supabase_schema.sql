@@ -1,11 +1,11 @@
 -- ============================================================================
--- AWAREMIND GROWTH SPACE — SUPABASE PRODUCTION SCHEMA (ZERO N8N)
--- Jalankan seluruh script ini di Supabase Dashboard -> SQL Editor -> Run
+-- AWAREMIND GROWTH SPACE — SUPABASE PRODUCTION SCHEMA V2 (ANTI-ERROR & AMAN)
+-- Aman dijalankan ulang berkali-kali di Supabase Dashboard -> SQL Editor -> Run
 -- ============================================================================
 
 create extension if not exists "pgcrypto";
 
--- 1. PROFILES (Otomatis dibuat saat user Login Google / Magic Link Email)
+-- 1. PROFILES
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text,
@@ -19,7 +19,7 @@ create table if not exists public.profiles (
 );
 
 create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer as $$
+returns trigger language plpgsql security definer set search_path = public as $$
 begin
   insert into public.profiles (id, full_name, email)
   values (
@@ -37,7 +37,14 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- 2. APP SETTINGS (Link Grup WA Pembeli & QRIS Dinamis)
+-- Backfill akun yang sudah terlanjur daftar sebelumnya agar pasti ada di tabel profiles!
+insert into public.profiles (id, full_name, email)
+select id, coalesce(raw_user_meta_data->>'full_name', split_part(email, '@', 1)), email
+from auth.users
+where email is not null
+on conflict (id) do nothing;
+
+-- 2. APP SETTINGS
 create table if not exists public.app_settings (
   key text primary key,
   value text not null,
@@ -50,7 +57,7 @@ insert into public.app_settings (key, value) values
   ('dana_number', '08XX-XXXX-XXXX (a.n. AwareMind Growth Space)')
 on conflict (key) do nothing;
 
--- 3. PRODUCTS (Katalog 6 Ruang + Bundling — bisa ditambah lewat /admin)
+-- 3. PRODUCTS
 create table if not exists public.products (
   id text primary key,
   space text not null,
@@ -68,7 +75,7 @@ create table if not exists public.products (
   created_at timestamptz not null default now()
 );
 
--- 4. ORDERS (Transaksi QRIS / DANA + Kode Referral 5% + Bukti Bayar)
+-- 4. ORDERS
 create table if not exists public.orders (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references public.profiles(id) on delete set null,
@@ -87,7 +94,7 @@ create table if not exists public.orders (
   paid_at timestamptz
 );
 
--- 5. USER LIBRARY (Akses Lifetime Produk per Akun)
+-- 5. USER LIBRARY
 create table if not exists public.user_library (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
@@ -99,7 +106,7 @@ create table if not exists public.user_library (
   unique(user_id, product_id)
 );
 
--- 6. JOURNALS (Refleksi Harian, Mood 1-5, Mode Jurnal, Crisis Flag)
+-- 6. JOURNALS
 create table if not exists public.journals (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references public.profiles(id) on delete cascade,
@@ -112,7 +119,7 @@ create table if not exists public.journals (
   created_at timestamptz not null default now()
 );
 
--- 7. SESSION BOOKINGS (HealMind Gratis & 1-on-1 Mentoring)
+-- 7. BOOKINGS
 create table if not exists public.bookings (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references public.profiles(id) on delete set null,
@@ -125,7 +132,14 @@ create table if not exists public.bookings (
 );
 
 -- ============================================================================
--- ROW LEVEL SECURITY (RLS)
+-- EXPLICIT GRANTS (Mencegah error "permission denied for table ...")
+-- ============================================================================
+grant usage on schema public to anon, authenticated;
+grant select on public.products, public.app_settings to anon, authenticated;
+grant all on public.profiles, public.products, public.orders, public.user_library, public.journals, public.bookings, public.app_settings to authenticated;
+
+-- ============================================================================
+-- ROW LEVEL SECURITY (RLS) — IDEMPOTENT (Drop & Create)
 -- ============================================================================
 alter table public.profiles enable row level security;
 alter table public.app_settings enable row level security;
@@ -136,13 +150,18 @@ alter table public.journals enable row level security;
 alter table public.bookings enable row level security;
 
 create or replace function public.is_admin()
-returns boolean language sql security definer as $$
+returns boolean language sql security definer set search_path = public as $$
   select exists (
     select 1 from public.profiles where id = auth.uid() and role = 'admin'
   );
 $$;
 
--- Profiles (HARDENED: user biasa TIDAK BISA ubah role atau is_premium sendiri!)
+-- Profiles
+drop policy if exists "Users read own profile" on public.profiles;
+drop policy if exists "Users update own profile" on public.profiles;
+drop policy if exists "Users update own safe fields" on public.profiles;
+drop policy if exists "Admins manage all profiles" on public.profiles;
+
 create policy "Users read own profile" on public.profiles for select using (auth.uid() = id or public.is_admin());
 create policy "Users update own safe fields" on public.profiles
   for update using (auth.uid() = id)
@@ -151,54 +170,74 @@ create policy "Users update own safe fields" on public.profiles
     and role = (select p.role from public.profiles p where p.id = auth.uid())
     and is_premium = (select p.is_premium from public.profiles p where p.id = auth.uid())
   );
-create policy "Admins manage all profiles" on public.profiles for all using (public.is_admin());
+create policy "Admins manage all profiles" on public.profiles for all using (public.is_admin()) with check (public.is_admin());
 
--- Products (Publik hanya lihat katalog tanpa membocorkan link file jika ingin dipisah ke product_secrets)
+-- Products
+drop policy if exists "Public read active products" on public.products;
+drop policy if exists "Admins manage products" on public.products;
 create policy "Public read active products" on public.products for select using (is_active = true or public.is_admin());
-create policy "Admins manage products" on public.products for all using (public.is_admin());
+create policy "Admins manage products" on public.products for all using (public.is_admin()) with check (public.is_admin());
 
--- Settings (HARDENED: Link Grup WA hanya bisa dibaca pembeli yang sudah PAID atau Admin!)
+-- App Settings
+drop policy if exists "Public read settings" on public.app_settings;
+drop policy if exists "Paid buyers or admins read private settings" on public.app_settings;
+drop policy if exists "Admins manage settings" on public.app_settings;
 create policy "Paid buyers or admins read private settings" on public.app_settings
   for select using (
     key <> 'wa_group_url'
     or public.is_admin()
-    or exists (
-      select 1 from public.orders o where o.user_id = auth.uid() and o.status = 'paid'
-    )
+    or exists (select 1 from public.orders o where o.user_id = auth.uid() and o.status = 'paid')
   );
-create policy "Admins manage settings" on public.app_settings for all using (public.is_admin());
+create policy "Admins manage settings" on public.app_settings for all using (public.is_admin()) with check (public.is_admin());
 
 -- Orders
+drop policy if exists "Users create own orders" on public.orders;
+drop policy if exists "Users read own orders" on public.orders;
+drop policy if exists "Admins update orders" on public.orders;
 create policy "Users create own orders" on public.orders for insert with check (auth.uid() = user_id);
 create policy "Users read own orders" on public.orders for select using (auth.uid() = user_id or public.is_admin());
-create policy "Admins update orders" on public.orders for update using (public.is_admin());
+create policy "Admins update orders" on public.orders for update using (public.is_admin()) with check (public.is_admin());
 
 -- Library
+drop policy if exists "Users read own library" on public.user_library;
+drop policy if exists "Admins insert library" on public.user_library;
 create policy "Users read own library" on public.user_library for select using (auth.uid() = user_id or public.is_admin());
-create policy "Admins insert library" on public.user_library for insert with check (public.is_admin());
+create policy "Admins insert library" on public.user_library for all using (public.is_admin()) with check (public.is_admin());
 
 -- Journals
-create policy "Users manage own journals" on public.journals for all using (auth.uid() = user_id);
+drop policy if exists "Users manage own journals" on public.journals;
+create policy "Users manage own journals" on public.journals for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- Bookings
-create policy "Users manage own bookings" on public.bookings for all using (auth.uid() = user_id or public.is_admin());
+drop policy if exists "Users manage own bookings" on public.bookings;
+create policy "Users manage own bookings" on public.bookings for all using (auth.uid() = user_id or public.is_admin()) with check (auth.uid() = user_id or public.is_admin());
 
--- Milestone Komunitas RPC (Aman tanpa membocorkan data pembeli)
+-- Milestone RPC
 create or replace function public.get_milestone_count()
-returns int language sql security definer as $$
+returns int language sql security definer set search_path = public as $$
   select least(100, count(distinct buyer_email)::int)
   from public.orders
   where status = 'paid';
 $$;
+grant execute on function public.get_milestone_count() to anon, authenticated;
 
 -- ============================================================================
--- STORAGE BUCKETS (Jalankan atau buat via menu Storage di Supabase)
+-- STORAGE BUCKETS & UPLOAD POLICIES
 -- ============================================================================
 insert into storage.buckets (id, name, public) values ('product-banners', 'product-banners', true) on conflict do nothing;
 insert into storage.buckets (id, name, public) values ('product-files', 'product-files', true) on conflict do nothing;
 insert into storage.buckets (id, name, public) values ('payment-proofs', 'payment-proofs', true) on conflict do nothing;
 
+drop policy if exists "Public read storage" on storage.objects;
+drop policy if exists "Auth upload payment proofs" on storage.objects;
+drop policy if exists "Admins upload products" on storage.objects;
+
+create policy "Public read storage" on storage.objects for select using (bucket_id in ('product-banners', 'product-files', 'payment-proofs'));
+create policy "Auth upload payment proofs" on storage.objects for insert with check (bucket_id = 'payment-proofs' and auth.role() = 'authenticated');
+create policy "Admins upload products" on storage.objects for insert with check (bucket_id in ('product-banners', 'product-files') and public.is_admin());
+
 -- ============================================================================
--- JADIKAN EMAIL TIM SEBAGAI ADMIN (Ganti dengan email Google milik Fatih & Sofi)
+-- PENTING: JADIKAN SEMUA AKUN YANG SUDAH TERDAFTAR SEKARANG SEBAGAI ADMIN
+-- (Atau ganti dengan email spesifik kamu & Ayuk Sofi)
 -- ============================================================================
--- update public.profiles set role = 'admin' where email in ('email-fatih@gmail.com', 'sofi.collage@gmail.com');
+-- update public.profiles set role = 'admin' where email in ('email-kamu@gmail.com', 'sofi.collage@gmail.com');

@@ -235,6 +235,23 @@
     </section>
   </main>
 
+  
+  <!-- MODAL LOGIN ADMIN (Email & Password) -->
+  <div id="admin-login-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 border border-[var(--border-hairline)] shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-[var(--ink-navy)]">Login Admin AwareMind</h3>
+        <button type="button" onclick="document.getElementById('admin-login-modal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-[var(--bg-canvas)] text-[var(--ink-muted)] font-bold">✕</button>
+      </div>
+      <p class="text-xs text-[var(--ink-muted)]">Masuk pakai email &amp; password akun tim yang sudah diberi role <strong>admin</strong> di Supabase.</p>
+      <div class="space-y-3">
+        <input id="adm-email" type="email" placeholder="Email Admin" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+        <input id="adm-pass" type="password" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+        <button type="button" onclick="submitAdminLogin()" class="w-full py-2.5 rounded-full bg-[var(--brand-royal)] text-white font-extrabold text-sm">Masuk Panel Admin</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="hidden fixed bottom-5 right-5 z-50 bg-[var(--ink-navy)] text-white px-5 py-3 rounded-2xl shadow-xl text-xs font-semibold max-w-sm"></div>
 
   <script>
@@ -285,12 +302,25 @@
     }
 
     async function loginAdmin() {
+      document.getElementById("admin-login-modal").classList.remove("hidden");
+    }
+
+    async function submitAdminLogin() {
+      const email = document.getElementById("adm-email").value.trim();
+      const password = document.getElementById("adm-pass").value;
+      if (!email || !password) { showToast("Isi email dan password admin."); return; }
       if (sb) {
-        await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.href } });
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) { showToast("Login gagal: " + error.message); return; }
+        document.getElementById("admin-login-modal").classList.add("hidden");
+        document.getElementById("btn-admin-auth").textContent = data.user.email.split("@")[0];
+        await loadLiveAdminData();
+        showToast("Berhasil masuk sebagai Admin!");
         return;
       }
+      document.getElementById("admin-login-modal").classList.add("hidden");
       document.getElementById("btn-admin-auth").textContent = "Admin Aktif";
-      showToast("Login simulasi aktif. Saat di-deploy ke Supabase, tombol ini membuka Login Google khusus Admin.");
+      showToast("Login simulasi aktif.");
     }
 
     function updateKPIs() {
@@ -313,7 +343,7 @@
               <span class="text-[10px] font-extrabold ${p.access_url ? 'text-[var(--teal-ok)]' : 'text-[var(--amber-warn)]'}">${p.access_url ? 'Link Siap' : 'Link Belum Diisi'}</span>
             </div>
             <div class="font-extrabold text-sm text-[var(--ink-navy)] truncate">${p.title} &middot; <span class="text-[var(--brand-royal)]">${formatRp(p.price)}</span></div>
-            <div class="text-[11px] text-[var(--ink-muted)] truncate">${p.desc}</div>
+            <div class="text-[11px] text-[var(--ink-muted)] truncate">${p.description || p.desc || ""}</div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
             <button type="button" onclick="editProduct('${p.id}')" class="px-3 py-1.5 rounded-full bg-white border border-[var(--border-hairline)] text-[var(--ink-navy)] text-xs font-bold hover:bg-[var(--sky-soft)]">Edit / Isi Link</button>
@@ -334,7 +364,7 @@
       document.getElementById("p-price").value = p.price;
       document.getElementById("p-fmt").value = p.format_label;
       document.getElementById("p-url").value = p.access_url || "";
-      document.getElementById("p-desc").value = p.desc || "";
+      document.getElementById("p-desc").value = p.description || p.desc || "";
       window.scrollTo({ top: 0, behavior: "smooth" });
       showToast(`Mengedit "${p.title}". Tempel link /copy atau unggah PDF lalu klik Simpan.`);
     }
@@ -422,7 +452,7 @@
               <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full ${o.status === 'paid' ? 'bg-[var(--teal-soft)] text-[var(--teal-ok)]' : 'bg-[var(--amber-soft)] text-[var(--amber-warn)]'}">${o.status === 'paid' ? 'LUNAS & TERKIRIM' : 'MENUNGGU ACC'}</span>
             </div>
             <div class="text-xs text-[var(--ink-muted)]">${o.buyer_email} &middot; ${o.items.join(", ")}</div>
-            <div class="text-xs font-bold text-[var(--brand-royal)]">${formatRp(o.total_amount)} (${o.pay_method}) &middot; Referral: ${o.referral_code}</div>
+            <div class="text-xs font-bold text-[var(--brand-royal)]">${formatRp(o.total_amount)} (${o.pay_method}) &middot; Referral: ${o.referral_code || "-"} ${o.proof_url ? `&middot; <a href="${o.proof_url}" target="_blank" rel="noopener noreferrer" class="underline text-[var(--sky-deep)]">Lihat Bukti Transfer ↗</a>` : ""}</div>
           </div>
           ${o.status === 'pending'
             ? `<button type="button" onclick="approveOrder('${o.id}')" class="px-4 py-2.5 rounded-full bg-[var(--teal-ok)] text-white text-xs font-extrabold hover:opacity-95 whitespace-nowrap">ACC &amp; Kirim Email + Link WA</button>`

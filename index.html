@@ -688,33 +688,63 @@
     </div>
   </div>
 
-  <!-- MODAL: LOGIN / DAFTAR AKUN (z-[70] ALWAYS ABOVE CART & OTHER MODALS!) -->
+  <!-- MODAL: LOGIN / DAFTAR AKUN (2-Tab Jelas: Masuk & Daftar + Info Akun / Logout) -->
   <div id="auth-modal" onclick="backdropClose(event, 'auth-modal')" class="hidden fixed inset-0 z-[70] bg-black/55 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 space-y-4 border border-[var(--border-hairline)] shadow-2xl">
       <div class="flex items-center justify-between">
         <div>
           <span class="text-[11px] font-extrabold uppercase text-[var(--sky-deep)]">Akun AwareMind</span>
-          <h3 class="text-xl font-extrabold text-[var(--ink-navy)]">Masuk atau Daftar Akun</h3>
+          <h3 id="auth-modal-title" class="text-xl font-extrabold text-[var(--ink-navy)]">Masuk ke Akunmu</h3>
         </div>
         <button type="button" onclick="closeModal('auth-modal')" class="w-8 h-8 rounded-full bg-[var(--bg-canvas)] text-[var(--ink-muted)] font-bold">✕</button>
       </div>
-      <p class="text-xs text-[var(--ink-muted)] leading-relaxed">Simpan riwayat jurnal, streak harian, status Premium Lifetime, dan akses Library Saya di semua perangkat.</p>
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs font-bold text-[var(--ink-navy)] mb-1">Nama Panggilan</label>
-          <input id="auth-name" type="text" placeholder="Masukkan namamu" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+
+      <!-- Logged-in Account View -->
+      <div id="auth-loggedin-view" class="hidden space-y-4">
+        <div class="p-4 rounded-2xl bg-[var(--bg-canvas)] border border-[var(--border-hairline)] space-y-1">
+          <div id="auth-user-name" class="font-extrabold text-base text-[var(--ink-navy)]"></div>
+          <div id="auth-user-email" class="text-xs text-[var(--ink-muted)]"></div>
+          <div id="auth-user-tier" class="inline-block mt-1 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-[var(--sky-soft)] text-[var(--sky-deep)]">AKUN FREE</div>
         </div>
-        <div>
-          <label class="block text-xs font-bold text-[var(--ink-navy)] mb-1">Email Aktif (Untuk Link Produk)</label>
-          <input id="auth-email" type="email" placeholder="nama@email.com" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="closeModal('auth-modal');switchView('library');" class="py-2.5 rounded-full bg-[var(--brand-soft)] text-[var(--brand-royal)] font-extrabold text-xs">Buka Library Saya</button>
+          <button type="button" onclick="logoutUser()" class="py-2.5 rounded-full bg-[var(--coral-soft)] text-[var(--coral-alert)] font-extrabold text-xs">Keluar Akun</button>
         </div>
-        <button type="button" onclick="loginWithGoogleDemo()" class="w-full py-2.5 rounded-full border border-[var(--border-hairline)] bg-white text-[var(--ink-navy)] font-extrabold text-sm hover:bg-[var(--bg-canvas)] flex items-center justify-center gap-2 shadow-sm">
-          <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.7-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.2 0-5.8-2.1-6.8-5H1.2v3.1C3.2 21.3 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.2 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.2C.4 8.2 0 10 0 12s.4 3.8 1.2 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.3 0 3.2 2.7 1.2 6.6l4 3.1c1-2.9 3.6-4.9 6.8-4.9z"/></svg>
-          <span>Lanjutkan dengan Google (Otomatis Email)</span>
-        </button>
-        <button type="button" onclick="completeAuth()" class="w-full py-2.5 rounded-full bg-[var(--brand-royal)] text-white font-extrabold text-sm hover:bg-[var(--brand-royal-dark)]">
-          Masuk via Magic Link Email
-        </button>
+      </div>
+
+      <!-- Guest Form View (2 Clear Tabs: Masuk vs Daftar Baru) -->
+      <div id="auth-guest-view" class="space-y-4">
+        <div class="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-[var(--bg-canvas)] border border-[var(--border-hairline)]">
+          <button type="button" id="auth-tab-login" onclick="setAuthTab('login')" class="py-2 rounded-xl text-xs font-extrabold bg-white text-[var(--brand-royal)] shadow-sm">Masuk</button>
+          <button type="button" id="auth-tab-register" onclick="setAuthTab('register')" class="py-2 rounded-xl text-xs font-bold text-[var(--ink-muted)]">Daftar Akun Baru</button>
+        </div>
+
+        <p id="auth-helper-text" class="text-xs text-[var(--ink-muted)] leading-relaxed">
+          Masuk untuk menyimpan riwayat jurnal, streak harian, status Premium, dan mengakses produk di <strong>Library Saya</strong>.
+        </p>
+
+        <div class="space-y-3">
+          <div id="auth-name-wrap" class="hidden">
+            <label class="block text-xs font-bold text-[var(--ink-navy)] mb-1">Nama Panggilan</label>
+            <input id="auth-name" type="text" placeholder="Contoh: Fatih" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[var(--ink-navy)] mb-1">Email Aktif</label>
+            <input id="auth-email" type="email" placeholder="nama@email.com" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-[var(--ink-navy)] mb-1">Password (min. 6 karakter)</label>
+            <input id="auth-password" type="password" placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-[var(--border-hairline)] text-sm" />
+          </div>
+
+          <button type="button" id="auth-submit-btn" onclick="submitAuthForm()" class="w-full py-2.5 rounded-full bg-[var(--brand-royal)] text-white font-extrabold text-sm hover:bg-[var(--brand-royal-dark)] shadow-sm">
+            Masuk Sekarang
+          </button>
+
+          <button type="button" onclick="sendMagicLinkBackup()" class="w-full py-2 rounded-full bg-[var(--bg-canvas)] text-[var(--ink-muted)] hover:text-[var(--brand-royal)] font-bold text-xs">
+            Atau kirim link login otomatis ke email
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -981,44 +1011,112 @@
       state.pendingAction = callback;
       openAuthModal();
     }
-    function openAuthModal() { document.getElementById("auth-modal").classList.remove("hidden"); }
-    async function completeAuth() {
-      const emailVal = document.getElementById("auth-email").value.trim();
-      if (sb) {
-        if (!emailVal) { showToast("Masukkan email aktifmu terlebih dahulu."); return; }
-        const { error } = await sb.auth.signInWithOtp({ email: emailVal, options: { emailRedirectTo: window.location.origin } });
-        if (error) { showToast("Gagal kirim link login: " + error.message); return; }
-        closeModal("auth-modal");
-        showToast("Link login otomatis dikirim ke " + emailVal + ". Cek inbox/spam!");
-        return;
+    let authTabMode = "login";
+
+    function setAuthTab(mode) {
+      authTabMode = mode;
+      const isReg = mode === "register";
+      document.getElementById("auth-modal-title").textContent = isReg ? "Daftar Akun Baru" : "Masuk ke Akunmu";
+      document.getElementById("auth-name-wrap").classList.toggle("hidden", !isReg);
+      document.getElementById("auth-submit-btn").textContent = isReg ? "Buat Akun & Masuk" : "Masuk Sekarang";
+      document.getElementById("auth-tab-login").className = !isReg
+        ? "py-2 rounded-xl text-xs font-extrabold bg-white text-[var(--brand-royal)] shadow-sm"
+        : "py-2 rounded-xl text-xs font-bold text-[var(--ink-muted)]";
+      document.getElementById("auth-tab-register").className = isReg
+        ? "py-2 rounded-xl text-xs font-extrabold bg-white text-[var(--brand-royal)] shadow-sm"
+        : "py-2 rounded-xl text-xs font-bold text-[var(--ink-muted)]";
+    }
+
+    function openAuthModal() {
+      const loggedIn = !!state.user;
+      document.getElementById("auth-loggedin-view").classList.toggle("hidden", !loggedIn);
+      document.getElementById("auth-guest-view").classList.toggle("hidden", loggedIn);
+      if (loggedIn) {
+        document.getElementById("auth-modal-title").textContent = "Profil Akunmu";
+        document.getElementById("auth-user-name").textContent = state.user.name;
+        document.getElementById("auth-user-email").textContent = state.user.email;
+        document.getElementById("auth-user-tier").textContent = state.isPremium ? "AKUN PREMIUM LIFETIME" : "AKUN FREE";
+      } else {
+        setAuthTab(authTabMode);
       }
-      const name = document.getElementById("auth-name").value.trim() || "Member";
-      const email = document.getElementById("auth-email").value.trim() || "member@awaremind.id";
-      state.user = { name, email };
+      document.getElementById("auth-modal").classList.remove("hidden");
+    }
+
+    async function submitAuthForm() {
+      const name = document.getElementById("auth-name").value.trim();
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
+
+      if (!email) { showToast("Masukkan email aktifmu terlebih dahulu."); return; }
+      if (!password || password.length < 6) { showToast("Password minimal 6 karakter."); return; }
+
+      if (sb) {
+        if (authTabMode === "register") {
+          const fullName = name || email.split("@")[0];
+          const { data, error } = await sb.auth.signUp({
+            email,
+            password,
+            options: { data: { full_name: fullName }, emailRedirectTo: "https://awaremind-growthspace.vercel.app" }
+          });
+          if (error) { showToast("Gagal daftar: " + error.message); return; }
+          if (data.session && data.user) {
+            await hydrateSupabaseUser(data.user);
+            closeModal("auth-modal");
+            showToast("Akun berhasil dibuat! Selamat datang, " + fullName + ".");
+            if (state.pendingAction) { const fn = state.pendingAction; state.pendingAction = null; fn(); }
+          } else {
+            closeModal("auth-modal");
+            showToast("Akun dibuat! Cek emailmu untuk konfirmasi lalu klik Masuk.");
+          }
+          return;
+        } else {
+          const { data, error } = await sb.auth.signInWithPassword({ email, password });
+          if (error) { showToast("Email atau password salah. Jika belum punya akun, klik Daftar Akun Baru."); return; }
+          if (data.user) {
+            await hydrateSupabaseUser(data.user);
+            closeModal("auth-modal");
+            showToast("Berhasil masuk! Selamat datang kembali.");
+            if (state.pendingAction) { const fn = state.pendingAction; state.pendingAction = null; fn(); }
+          }
+          return;
+        }
+      }
+
+      // Preview fallback
+      const displayName = name || email.split("@")[0];
+      state.user = { name: displayName, email };
       document.getElementById("checkout-email").value = email;
-      document.getElementById("btn-auth-nav").textContent = name;
+      document.getElementById("btn-auth-nav").textContent = displayName.slice(0, 12);
       closeModal("auth-modal");
-      showToast(`Selamat datang, ${name}. Akunmu kini aktif.`);
-      if (state.pendingAction) {
-        const fn = state.pendingAction;
-        state.pendingAction = null;
-        fn();
-      }
+      showToast(`Selamat datang, ${displayName}. Akunmu kini aktif.`);
+      if (state.pendingAction) { const fn = state.pendingAction; state.pendingAction = null; fn(); }
     }
-    async function loginWithGoogleDemo() {
+
+    async function sendMagicLinkBackup() {
+      const email = document.getElementById("auth-email").value.trim();
+      if (!email) { showToast("Isi kolom email aktif terlebih dahulu."); return; }
       if (sb) {
-        const { error } = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin } });
-        if (error) showToast("Login Google gagal: " + error.message);
+        const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: "https://awaremind-growthspace.vercel.app" } });
+        if (error) { showToast("Gagal kirim link email: " + error.message); return; }
+        closeModal("auth-modal");
+        showToast("Link login otomatis dikirim ke " + email + ". Cek inbox/spam!");
         return;
       }
-      document.getElementById("auth-name").value = document.getElementById("auth-name").value.trim() || "Fatih";
-      document.getElementById("auth-email").value = document.getElementById("auth-email").value.trim() || "fatih@gmail.com";
-      completeAuth();
+      showToast("Link login otomatis siap dikirim saat terhubung ke Supabase.");
     }
-    function quickDemoLogin() {
-      document.getElementById("auth-name").value = "Fatih";
-      document.getElementById("auth-email").value = "fatih@awaremind.id";
-      completeAuth();
+
+    async function logoutUser() {
+      if (sb) await sb.auth.signOut();
+      state.user = null;
+      state.library = [];
+      state.isPremium = false;
+      document.getElementById("btn-auth-nav").textContent = "Masuk";
+      document.getElementById("nav-tier-badge").textContent = "FREE";
+      document.getElementById("nav-tier-badge").className = "text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-[var(--sky-soft)] text-[var(--sky-deep)]";
+      updateBadges();
+      closeModal("auth-modal");
+      switchView("explore");
+      showToast("Kamu telah keluar dari akun.");
     }
 
     function switchView(viewName) {
