@@ -275,8 +275,7 @@
               <option value="Sheets">Google Sheets / Excel</option>
               <option value="Canva">Canva Template / PPT</option>
             </select>
-            <input id="search-input" type="text" oninput="renderCatalog()" placeholder="Cari toolkit, tracker, CV..." class="px-4 py-2 rounded-full bg-white border border-[var(--border-hairline)] text-xs sm:text-sm w-full sm:w-56" />
-          </div>
+<input id="search-input" type="search" name="catalog_search_query" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" oninput="renderCatalog()" placeholder="Cari toolkit, tracker, CV..." class="px-4 py-2 rounded-full bg-white border border-[var(--border-hairline)] text-xs sm:text-sm w-full sm:w-56" />          </div>
         </div>
 
         <div id="space-tabs" class="flex items-center gap-2 scroll-x-touch no-scrollbar pb-1 w-full"></div>
