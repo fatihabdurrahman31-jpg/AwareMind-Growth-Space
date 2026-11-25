@@ -378,7 +378,13 @@
     async function loadLiveAdminData() {
       if (!sb) return;
       const { data: prods } = await sb.from("products").select("*").order("created_at", { ascending: false });
-      if (prods && prods.length) demoProducts = prods;
+      if (prods && prods.length) {
+        prods.forEach(dp => {
+          const idx = demoProducts.findIndex(x => x.id === dp.id);
+          if (idx >= 0) demoProducts[idx] = { ...demoProducts[idx], ...dp, desc: dp.description || demoProducts[idx].desc };
+          else demoProducts.unshift({ ...dp, desc: dp.description || "" });
+        });
+      }
       const { data: ords } = await sb.from("orders").select("*").order("created_at", { ascending: false });
       if (ords) demoOrders = ords.map(o => ({ ...o, items: (o.items || []).map(i => i.title || i) }));
       const { data: mCount } = await sb.rpc("get_milestone_count");
