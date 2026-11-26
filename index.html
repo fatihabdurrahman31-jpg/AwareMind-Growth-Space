@@ -655,8 +655,9 @@
           <span>Total Bayar</span><span id="cart-total">Rp0</span>
         </div>
       </div>
-      <button type="button" onclick="completeCheckout()" class="w-full py-3 rounded-full bg-[var(--sky-primary)] text-white font-extrabold text-sm hover:bg-[var(--sky-deep)]">
-        Bayar &amp; Buka Akses Sekarang
+      <div id="checkout-status-msg" class="hidden p-3 rounded-xl text-xs font-bold leading-relaxed"></div>
+      <button type="button" id="btn-checkout-submit" onclick="completeCheckout()" class="w-full py-3 rounded-full bg-[var(--sky-primary)] text-white font-extrabold text-sm hover:bg-[var(--sky-deep)] disabled:opacity-60">
+        Kirim Bukti &amp; Selesaikan Pesanan
       </button>
     </div>
   </div>
@@ -1199,7 +1200,7 @@
       }, true);
     }
 
-    function openCartModal() { renderCartModal(); document.getElementById("cart-modal").classList.remove("hidden"); }
+    function openCartModal() { const m = document.getElementById("checkout-status-msg"); if (m) m.classList.add("hidden"); const b = document.getElementById("btn-checkout-submit"); if (b) { b.disabled = false; b.textContent = "Kirim Bukti & Selesaikan Pesanan"; b.onclick = completeCheckout; } renderCartModal(); document.getElementById("cart-modal").classList.remove("hidden"); }
     function openPremiumModal() { document.getElementById("premium-modal").classList.remove("hidden"); }
     function closeModal(id) { const el = document.getElementById(id); if (el) el.classList.add("hidden"); }
 
@@ -1246,32 +1247,85 @@
       document.getElementById("cart-total").textContent = formatRp(sub - disc);
     }
 
+    function setCheckoutMsg(text, isError = false) {
+      const box = document.getElementById("checkout-status-msg");
+      if (!box) return;
+      box.textContent = text;
+      box.className = isError
+        ? "p-3 rounded-xl text-xs font-bold leading-relaxed bg-[var(--coral-soft)] text-[var(--coral-alert)] border border-[#F5C6C8]"
+        : "p-3 rounded-xl text-xs font-bold leading-relaxed bg-[var(--teal-soft)] text-[var(--teal-ok)] border border-[#B5E5DC]";
+      box.classList.remove("hidden");
+    }
+
     function completeCheckout() {
-      if (!state.cart.length) { showToast("Pilih minimal 1 produk terlebih dahulu."); return; }
+      if (!state.cart.length) { setCheckoutMsg("Pilih minimal 1 produk terlebih dahulu.", true); return; }
       requireAuth(async () => {
-        if (sb && state.user?.id) {
-          const email = document.getElementById("checkout-email").value.trim() || state.user.email;
-          const sub = state.cart.reduce((s, c) => s + c.price, 0);
-          const disc = state.referralApplied ? Math.round(sub * 0.05) : 0;
-          const refCode = document.getElementById("referral-input").value.trim().toUpperCase() || null;
-          let proofUrl = null;
-          const proofFile = document.getElementById("checkout-proof")?.files?.[0];
-          if (proofFile) {
-            const pPath = `${state.user.id}/${Date.now()}_${proofFile.name}`;
-            const { error: upErr } = await sb.storage.from("payment-proofs").upload(pPath, proofFile);
-            if (!upErr) proofUrl = sb.storage.from("payment-proofs").getPublicUrl(pPath).data.publicUrl;
+        const btn = document.getElementById("btn-checkout-submit");
+        const email = document.getElementById("checkout-email").value.trim() || state.user?.email || "";
+        if (!email) { setCheckoutMsg("Masukkan email penerima link akses terlebih dahulu.", true); return; }
+
+        if (sb) {
+          try {
+            const { data: sessData } = await sb.auth.getSession();
+            const activeUser = sessData?.session?.user;
+            if (!activeUser) {
+              setCheckoutMsg("Sesi loginmu habis. Silakan klik Masuk ulang terlebih dahulu.", true);
+              return;
+            }
+            const proofFile = document.getElementById("checkout-proof")?.files?.[0];
+            if (!proofFile) {
+              setCheckoutMsg("Unggah dulu foto/screenshot bukti transfer QRIS atau DANA kamu di kolom Pilih File di atas ya.", true);
+              return;
+            }
+            if (btn) { btn.disabled = true; btn.textContent = "Mengirim bukti pembayaran..."; }
+            setCheckoutMsg("Sedang mengunggah bukti bayar & menyimpan pesanan...", false);
+
+            const sub = state.cart.reduce((s, c) => s + c.price, 0);
+            const disc = state.referralApplied ? Math.round(sub * 0.05) : 0;
+            const refCode = document.getElementById("referral-input").value.trim().toUpperCase() || null;
+
+            let proofUrl = null;
+            const safeName = proofFile.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+            const pPath = `${activeUser.id}/${Date.now()}_${safeName}`;
+            const { error: upErr } = await sb.storage.from("payment-proofs").upload(pPath, proofFile, { upsert: true });
+            if (!upErr) {
+              proofUrl = sb.storage.from("payment-proofs").getPublicUrl(pPath).data.publicUrl;
+            }
+
+            const { error: ordErr } = await sb.from("orders").insert({
+              user_id: activeUser.id,
+              buyer_email: email,
+              buyer_name: state.user?.name || activeUser.email.split("@")[0],
+              items: state.cart,
+              subtotal: sub,
+              referral_code: refCode,
+              discount_amount: disc,
+              total_amount: sub - disc,
+              pay_method: state.payMethod,
+              proof_url: proofUrl,
+              status: "pending"
+            });
+
+            if (ordErr) {
+              setCheckoutMsg("Gagal menyimpan pesanan: " + ordErr.message, true);
+              if (btn) { btn.disabled = false; btn.textContent = "Kirim Bukti & Selesaikan Pesanan"; }
+              return;
+            }
+
+            state.cart = [];
+            updateBadges();
+            renderCartModal();
+            setCheckoutMsg("Pesanan & bukti transfer BERHASIL diterima! Tim kami akan memverifikasi segera, lalu link produk + Grup WA otomatis masuk ke " + email + " dan menu Library Saya.", false);
+            if (btn) { btn.disabled = false; btn.textContent = "Tutup"; btn.onclick = () => { closeModal("cart-modal"); btn.onclick = completeCheckout; btn.textContent = "Kirim Bukti & Selesaikan Pesanan"; document.getElementById("checkout-status-msg").classList.add("hidden"); }; }
+            showToast("Pesanan berhasil dikirim! Menunggu verifikasi admin.");
+          } catch (err) {
+            setCheckoutMsg("Terjadi kendala jaringan: " + (err?.message || err), true);
+            if (btn) { btn.disabled = false; btn.textContent = "Kirim Bukti & Selesaikan Pesanan"; }
           }
-          const { error: ordErr } = await sb.from("orders").insert({
-            user_id: state.user.id, buyer_email: email, buyer_name: state.user.name,
-            items: state.cart, subtotal: sub, referral_code: refCode, discount_amount: disc,
-            total_amount: sub - disc, pay_method: state.payMethod, proof_url: proofUrl, status: "pending"
-          });
-          if (ordErr) { showToast("Gagal menyimpan pesanan: " + ordErr.message); return; }
-          state.cart = []; updateBadges(); closeModal("cart-modal");
-          showToast("Bukti bayar terkirim! Tim akan ACC segera & kirim link produk + Grup WA ke " + email);
           return;
         }
-        const email = document.getElementById("checkout-email").value.trim() || state.user.email;
+
+        // Local preview fallback (when no Supabase configured)
         let boughtPremium = false;
         state.cart.forEach(item => {
           if (item.kind === "premium") {
